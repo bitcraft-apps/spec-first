@@ -14,9 +14,7 @@ Commands are defined as skills in `skills/`. Each `SKILL.md` is the source of tr
 
 ## Agents
 
-Agent files live in `agents/`. Each has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`). See agent files for details — they are the source of truth.
-
-Agent turn limits (`maxTurns`) are set in skill files, not agent frontmatter.
+Agent files live in `agents/`. Each has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). See agent files for details — they are the source of truth.
 
 ## Integration Contracts
 
@@ -94,7 +92,7 @@ Current events: `Stop` (2 hooks: validate-spec, validate-implementation), `Subag
 
 ## Setup
 
-- Claude Code CLI with `Agent` tool support (`subagent_type`, `maxTurns`)
+- Claude Code CLI with `Agent` tool support (`subagent_type`)
 - Haiku model access for research agents
 - LSP is optional — `analyze-implementation` falls back to Grep/Glob
 

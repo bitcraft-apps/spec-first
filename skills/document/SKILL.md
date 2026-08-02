@@ -32,9 +32,9 @@ Creates minimal, proportional documentation. Match doc weight to change weight.
 After input resolution, run agents in 3 batches:
 
 **Batch 1 (Parallel):**
-- Task: analyze-artifacts (maxTurns: 6) with requirements: $ARTIFACT_PATHS
-- Task: analyze-implementation (maxTurns: 10) with requirements: $IMPLEMENTATION_PATHS
-- Task: analyze-existing-docs (maxTurns: 6) (scans project for existing documentation inventory)
+- Task: analyze-artifacts with requirements: $ARTIFACT_PATHS
+- Task: analyze-implementation with requirements: $IMPLEMENTATION_PATHS
+- Task: analyze-existing-docs (scans project for existing documentation inventory)
 
 **Gate 1 — Post-Analysis:**
 Check that each output file exists:
@@ -45,8 +45,8 @@ Check that each output file exists:
 Missing file = agent failed to run → halt pipeline, report which file(s) are missing, preserve existing output for inspection. Empty or whitespace-only file = valid "no docs needed" signal → pass. Write gate results to `$SF_DIR/research/gate-analysis.md` (pass/fail per file, warnings for files under 5 lines).
 
 **Batch 2 (Parallel):**
-- Task: create-technical-docs (maxTurns: 15) (reads $SF_DIR/research/artifacts-summary.md, $SF_DIR/research/implementation-summary.md)
-- Task: create-user-docs (maxTurns: 15) (reads $SF_DIR/research/artifacts-summary.md, $SF_DIR/research/implementation-summary.md)
+- Task: create-technical-docs (reads $SF_DIR/research/artifacts-summary.md, $SF_DIR/research/implementation-summary.md)
+- Task: create-user-docs (reads $SF_DIR/research/artifacts-summary.md, $SF_DIR/research/implementation-summary.md)
 
 **Gate 2 — Post-Generation:**
 For each generated doc, verify:
@@ -56,7 +56,7 @@ For each generated doc, verify:
 Block on: placeholder-only content. Empty files are valid — they mean the agent correctly determined no docs were needed. Write gate results to `$SF_DIR/research/gate-generation.md`.
 
 **Batch 3:**
-- Task: integrate-docs (maxTurns: 15) (reads docs-inventory.md to update existing files or create new ones)
+- Task: integrate-docs (reads docs-inventory.md to update existing files or create new ones)
 
 **Gate 3 — Post-Integration:**
 Verify integration completed. If no docs were updated or created, that's valid — report "no documentation changes needed" and finish cleanly. Write gate results to `$SF_DIR/research/gate-integration.md`.

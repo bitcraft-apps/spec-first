@@ -2,6 +2,7 @@
 name: create-user-docs
 description: Generate minimal user-facing documentation. Use when a change affects user-visible behavior or workflows.
 tools: Read, Write
+maxTurns: 15
 ---
 
 # User Documentation Generator

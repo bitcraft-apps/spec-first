@@ -3,6 +3,7 @@ name: define-scope
 description: Define MVP boundaries and scope. Use when decomposing requirements into the narrowest viable change.
 tools: Write
 model: haiku
+maxTurns: 6
 ---
 
 # Scope Definition

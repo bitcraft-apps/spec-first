@@ -3,6 +3,7 @@ name: manage-spec-directory
 description: Create and manage spec output directories. Use when initializing or resetting the SF workspace.
 tools: Bash
 model: haiku
+maxTurns: 3
 ---
 
 # Spec Directory Manager

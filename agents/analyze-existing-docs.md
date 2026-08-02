@@ -3,6 +3,7 @@ name: analyze-existing-docs
 description: Scan existing docs and produce an inventory manifest. Use when determining which docs to update vs create.
 tools: Read, Glob
 model: haiku
+maxTurns: 6
 ---
 
 # Documentation Inventory Scanner
