@@ -15,6 +15,7 @@ tests/
 ├── integration/                 # Integration tests
 │   ├── directory-isolation.bats # Spec directory isolation
 │   ├── framework.bats           # Framework structure tests
+│   ├── hooks.bats               # Hook execution and output
 │   ├── plugin-validation.bats   # Plugin artifact validation
 │   └── workflow.bats            # Workflow integration
 │
@@ -127,6 +128,7 @@ bats e2e/                           # All E2E tests
 **Files**:
 - `directory-isolation.bats`: Spec directory isolation
 - `framework.bats`: Framework structure and validation
+- `hooks.bats`: Hook execution and output (requires BATS 1.5.0 or later)
 - `plugin-validation.bats`: Plugin artifact validation (requires `python3`)
 - `workflow.bats`: Workflow integration
 
@@ -331,6 +333,22 @@ teardown() {
     [[ "$output" == *"expected content"* ]]
 }
 ```
+
+**Hook Tests:**
+
+Hooks read a JSON payload on stdin and write a decision to stdout. To test a hook:
+
+1. **Make a Temporary Directory**: Create `.claude/.sf/` in it during `setup()`
+2. **Write Fixtures**: Add the files the hook reads, for example `spec.md` and `implementation-summary.md`
+3. **Send the Payload**: Point the `cwd` field at the temporary directory
+4. **Separate stderr**: Use `run --separate-stderr` to keep stderr out of `$output`
+5. **Clean Up**: Remove the temporary directory in `teardown()`
+
+```bash
+run --separate-stderr bash "$HOOK" <<< "{\"cwd\":\"$TEST_DIR\",\"stop_hook_active\":false}"
+```
+
+The test runner finds `tests/integration/*.bats` automatically. A new file needs no registration. See `tests/integration/hooks.bats` for a full example.
 
 ### Debugging Failed Tests
 
