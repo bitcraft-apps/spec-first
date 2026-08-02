@@ -7,14 +7,6 @@
           { "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/validate-implementation.sh" }
         ]
       }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          { "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/validate-subagent.sh" }
-        ]
-      }
     ]
   }
 }
