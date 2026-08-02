@@ -53,16 +53,16 @@ Else:
 After directory setup and clarification (if needed), run agents:
 
 **Pre-execution:**
-- Task: manage-spec-directory (maxTurns: 3) (reads mode from $SF_DIR/mode file)
+- Task: manage-spec-directory (reads mode from $SF_DIR/mode file)
 - **If manage-spec-directory fails (non-zero exit), halt immediately — do not run downstream agents.**
 
 **Batch 1 (Parallel):**
-- Task: define-scope (maxTurns: 6) with requirements: $ARGUMENTS
-- Task: create-criteria (maxTurns: 6) with requirements: $ARGUMENTS
-- Task: identify-risks (maxTurns: 6) with requirements: $ARGUMENTS
+- Task: define-scope with requirements: $ARGUMENTS
+- Task: create-criteria with requirements: $ARGUMENTS
+- Task: identify-risks with requirements: $ARGUMENTS
 
 **Batch 2:**
-- Task: synthesize-spec (maxTurns: 12) to combine all research, following the structure in `${CLAUDE_SKILL_DIR}/spec-template.md`
+- Task: synthesize-spec to combine all research, following the structure in `${CLAUDE_SKILL_DIR}/spec-template.md`
 
 Output: `$SF_DIR/spec.md` (direct file or symlink to timestamped spec)
 

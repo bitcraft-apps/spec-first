@@ -3,6 +3,7 @@ name: identify-risks
 description: Identify blockers, risks, and edge cases. Use when assessing what could go wrong before implementation.
 tools: Write
 model: haiku
+maxTurns: 6
 ---
 
 # Risk Identification

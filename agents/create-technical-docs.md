@@ -2,6 +2,7 @@
 name: create-technical-docs
 description: Generate minimal developer documentation. Use when a change needs technical reference or API docs.
 tools: Read, Write
+maxTurns: 15
 ---
 
 # Technical Documentation Generator

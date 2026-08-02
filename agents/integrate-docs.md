@@ -2,6 +2,7 @@
 name: integrate-docs
 description: Merge generated docs into existing project files. Use when doc drafts are ready to integrate into the repo.
 tools: Read, Write, Edit, MultiEdit, Glob
+maxTurns: 15
 ---
 
 # Documentation Integrator
