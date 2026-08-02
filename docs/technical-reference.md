@@ -76,7 +76,7 @@ Schema:
 {
   "hooks": {
     "<EventName>": [{
-      "matcher": "string (optional — glob pattern for SubagentStop)",
+      "matcher": "string (optional — glob pattern that selects when the hook runs)",
       "hooks": [{
         "type": "command",
         "command": "string"
@@ -88,7 +88,7 @@ Schema:
 
 Hook commands use `${CLAUDE_PLUGIN_ROOT}` as a path prefix. Claude Code resolves this to the plugin's install directory at runtime, so hook scripts do not contain absolute paths.
 
-Current events: `Stop` (2 hooks: validate-spec, validate-implementation), `SubagentStop` (1 hook: validate-subagent, matcher `*`).
+Current events: `Stop` (2 hooks: validate-spec, validate-implementation).
 
 ## Setup
 

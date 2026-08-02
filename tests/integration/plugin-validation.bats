@@ -83,7 +83,6 @@ data = json.load(sys.stdin)
 assert 'hooks' in data, 'missing hooks key'
 hooks = data['hooks']
 assert 'Stop' in hooks, 'missing Stop hook event'
-assert 'SubagentStop' in hooks, 'missing SubagentStop hook event'
 "
 }
 
