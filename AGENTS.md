@@ -54,3 +54,10 @@ Spec First — minimalist development workflow.
 1. **YAGNI, KISS, SRP** — always.
 2. **No validation for things that can't go wrong.** Trust internal contracts.
 3. **No abstractions for one-off operations.**
+
+## Writing style
+
+English prose — docs, code comments, commit and PR text, issues, user-visible strings —
+follows [Simplified Technical English](https://www.asd-ste100.org/) (ASD-STE100): one
+meaning per word, active voice, imperative for instructions, simple tenses, one
+instruction per sentence (max 20 words), no jargon or metaphor. Code identifiers are exempt.
