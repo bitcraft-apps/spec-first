@@ -22,7 +22,7 @@ teardown() {
 }
 
 @test "framework directory structure exists" {
-    [ -f "$PROJECT_ROOT/CLAUDE.md" ]
+    [ -f "$PROJECT_ROOT/AGENTS.md" ]
     [ -f "$PROJECT_ROOT/VERSION" ]
     [ -d "$PROJECT_ROOT/skills" ]
     [ -d "$PROJECT_ROOT/agents" ]
