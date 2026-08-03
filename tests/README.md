@@ -330,40 +330,43 @@ cd tests && ./run-tests.sh --tap
 
 ## Host Skill Loading Check
 
-The automated tests check that the install script writes the files. They do not check that a
-host loads the skills. That needs an interactive session. Do this check by hand before a
-release. One host is enough.
+The automated tests check that the install script writes the files. They do not check that a host
+loads them. Do this check by hand before a release.
 
-1. Install the skills:
+**Use an interactive session.** A headless print mode is not a valid substitute. GitHub Copilot
+CLI 0.0.346 in `-p` mode loaded no skill at all, not even a minimal probe skill placed in the
+directory it reads. A pass in print mode therefore proves nothing.
+
+sf reaches hosts by two separate paths. Check the path you changed.
+
+### Plugin path — Claude Code
+
+Claude Code reads `~/.claude/skills`, not `.agents/skills`, and installs sf as a plugin. Do not
+use `install.sh` to check this path.
+
+1. `claude plugin install sf@spec-first`
+2. Start Claude Code. Run `/sf:spec add a hello command` in a throwaway git repository.
+3. Confirm that `.sf/spec.md` appears.
+
+### Skills directory path — every other host
+
+1. Install the skills. Check the skill documentation of your host for the directory it reads,
+   then pass it with `--dir` if it is not `.agents/skills`:
 
    ```bash
-   ./scripts/install.sh
+   ./scripts/install.sh                       # .agents/skills
+   ./scripts/install.sh --dir <host-skill-dir>
    ```
 
-2. Start the host. List its skills:
+2. Start the host interactively. List its skills with the command of that host. Confirm that
+   `spec`, `implement` and `document` appear with their descriptions.
+3. Run the spec command in a throwaway git repository. Confirm that `.sf/spec.md` appears.
 
-   ```
-   /skills list
-   ```
+### Record
 
-   Confirm that `spec`, `implement` and `document` appear with their descriptions.
-
-3. Make a throwaway git repository. Run the spec command in it:
-
-   ```
-   /spec add a hello command
-   ```
-
-   Confirm that `.sf/spec.md` appears.
-
-4. Add a row to the table below.
-
-`/skills list` and `/spec` are the Claude Code spellings. Other hosts use their own command
-names. Check the skill documentation of your host.
-
-| sf version | Host | Host version | Date |
-|------------|------|--------------|------|
-|            |      |              |      |
+| sf version | Path | Host | Host version | Date |
+|------------|------|------|--------------|------|
+|            |      |      |              |      |
 
 ## Troubleshooting
 
