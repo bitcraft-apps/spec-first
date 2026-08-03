@@ -5,6 +5,29 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1](https://github.com/bitcraft-apps/spec-first/compare/v1.3.0...v1.3.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* **hooks:** count only unchecked criteria ([#231](https://github.com/bitcraft-apps/spec-first/issues/231)) ([c8c38d3](https://github.com/bitcraft-apps/spec-first/commit/c8c38d381e1c10123ca135788b7604cacc061a9b))
+* move maxTurns from skill prose to agent frontmatter ([#222](https://github.com/bitcraft-apps/spec-first/issues/222)) ([a231767](https://github.com/bitcraft-apps/spec-first/commit/a231767f0b87623f46bbd4016768cd1b48d70c3f))
+
+
+### Code Refactoring
+
+* make validate-implementation guard explicit ([#225](https://github.com/bitcraft-apps/spec-first/issues/225)) ([6938e70](https://github.com/bitcraft-apps/spec-first/commit/6938e70558b811ad75eda41a8ace4baddca2261b))
+
+
+### Documentation
+
+* adopt Simplified Technical English (ASD-STE100) for English prose ([#205](https://github.com/bitcraft-apps/spec-first/issues/205)) ([dd79dcd](https://github.com/bitcraft-apps/spec-first/commit/dd79dcdaec4cf10ab7bb4d799476e00daf8aa64c))
+
+
+### Miscellaneous
+
+* remove dead validate-subagent.sh hook ([#223](https://github.com/bitcraft-apps/spec-first/issues/223)) ([7fcaebb](https://github.com/bitcraft-apps/spec-first/commit/7fcaebb41ea20cf94796d532b05f415b3bb2884b))
+
 ## [1.3.0](https://github.com/bitcraft-apps/spec-first/compare/v1.2.0...v1.3.0) (2026-03-16)
 
 
