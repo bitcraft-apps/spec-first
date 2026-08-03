@@ -67,40 +67,40 @@ teardown() {
 # --- File existence fallbacks (implement skill) ---
 
 @test "spec exists check returns yes when file present" {
-    mkdir -p "$TEST_DIR/.claude/.sf"
-    touch "$TEST_DIR/.claude/.sf/spec.md"
+    mkdir -p "$TEST_DIR/.sf"
+    touch "$TEST_DIR/.sf/spec.md"
     cd "$TEST_DIR"
-    run bash -c 'test -f .claude/.sf/spec.md && echo "yes" || echo "no"'
+    run bash -c 'test -f .sf/spec.md && echo "yes" || echo "no"'
     [ "$output" = "yes" ]
 }
 
 @test "spec exists check returns no when file missing" {
     cd "$TEST_DIR"
-    run bash -c 'test -f .claude/.sf/spec.md && echo "yes" || echo "no"'
+    run bash -c 'test -f .sf/spec.md && echo "yes" || echo "no"'
     [ "$output" = "no" ]
 }
 
 # --- File existence fallbacks (document skill) ---
 
 @test "implementation summary shows content when file exists" {
-    mkdir -p "$TEST_DIR/.claude/.sf"
-    echo "summary line 1" > "$TEST_DIR/.claude/.sf/implementation-summary.md"
+    mkdir -p "$TEST_DIR/.sf"
+    echo "summary line 1" > "$TEST_DIR/.sf/implementation-summary.md"
     cd "$TEST_DIR"
-    run bash -c 'test -f .claude/.sf/implementation-summary.md && head -20 .claude/.sf/implementation-summary.md || echo "none"'
+    run bash -c 'test -f .sf/implementation-summary.md && head -20 .sf/implementation-summary.md || echo "none"'
     [ "$output" = "summary line 1" ]
 }
 
 @test "implementation summary returns none when file missing" {
     cd "$TEST_DIR"
-    run bash -c 'test -f .claude/.sf/implementation-summary.md && head -20 .claude/.sf/implementation-summary.md || echo "none"'
+    run bash -c 'test -f .sf/implementation-summary.md && head -20 .sf/implementation-summary.md || echo "none"'
     [ "$output" = "none" ]
 }
 
 @test "implementation summary caps at 20 lines" {
-    mkdir -p "$TEST_DIR/.claude/.sf"
-    for i in $(seq 1 30); do echo "line $i"; done > "$TEST_DIR/.claude/.sf/implementation-summary.md"
+    mkdir -p "$TEST_DIR/.sf"
+    for i in $(seq 1 30); do echo "line $i"; done > "$TEST_DIR/.sf/implementation-summary.md"
     cd "$TEST_DIR"
-    run bash -c 'test -f .claude/.sf/implementation-summary.md && head -20 .claude/.sf/implementation-summary.md || echo "none"'
+    run bash -c 'test -f .sf/implementation-summary.md && head -20 .sf/implementation-summary.md || echo "none"'
     [ "${#lines[@]}" -eq 20 ]
 }
 
@@ -116,10 +116,10 @@ teardown() {
 @test "implement skill has Project Context with dynamic injection" {
     grep -q '## Project Context' "$PROJECT_ROOT/skills/implement/SKILL.md"
     grep -q '!`git branch --show-current 2>/dev/null`' "$PROJECT_ROOT/skills/implement/SKILL.md"
-    grep -q '!`test -f .claude/.sf/spec.md && echo "yes" || echo "no"`' "$PROJECT_ROOT/skills/implement/SKILL.md"
+    grep -q '!`test -f .sf/spec.md && echo "yes" || echo "no"`' "$PROJECT_ROOT/skills/implement/SKILL.md"
 }
 
 @test "document skill has Project Context with dynamic injection" {
     grep -q '## Project Context' "$PROJECT_ROOT/skills/document/SKILL.md"
-    grep -q '!`test -f .claude/.sf/implementation-summary.md' "$PROJECT_ROOT/skills/document/SKILL.md"
+    grep -q '!`test -f .sf/implementation-summary.md' "$PROJECT_ROOT/skills/document/SKILL.md"
 }

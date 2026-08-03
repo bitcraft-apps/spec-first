@@ -10,12 +10,12 @@ maxTurns: 15
 Creates MINIMAL developer documentation. Document only what a developer needs to use or extend the change.
 
 Inputs:
-- `.claude/.sf/research/artifacts-summary.md`
-- `.claude/.sf/research/implementation-summary.md`
-- `.claude/.sf/research/docs-inventory.md` (existing doc manifest)
+- `.sf/research/artifacts-summary.md`
+- `.sf/research/implementation-summary.md`
+- `.sf/research/docs-inventory.md` (existing doc manifest)
 
-Output: `.claude/.sf/research/technical-docs.md`
-Shared context: `.claude/.sf/research/doc-context.md`
+Output: `.sf/research/technical-docs.md`
+Shared context: `.sf/research/doc-context.md`
 
 Sections — include ONLY if the change warrants it:
 - ## Overview — only for new features or architectural changes. Skip for config/parameter changes.
@@ -33,5 +33,5 @@ Rules:
 - If unclear whether something needs docs, it doesn't
 
 Shared context convention:
-- If `.claude/.sf/research/doc-context.md` exists, read it for terminology decisions
+- If `.sf/research/doc-context.md` exists, read it for terminology decisions
 - After writing output, append terms and topics to doc-context.md under `## Technical Docs`

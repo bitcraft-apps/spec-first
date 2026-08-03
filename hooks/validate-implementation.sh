@@ -5,8 +5,9 @@ INPUT=$(cat)
 [ "$(echo "$INPUT" | jq -r '.stop_hook_active // false')" = "true" ] && exit 0
 
 PROJECT_DIR=$(echo "$INPUT" | jq -r '.cwd // ""')
-SPEC_FILE="$PROJECT_DIR/.claude/.sf/spec.md"
-IMPL_FILE="$PROJECT_DIR/.claude/.sf/implementation-summary.md"
+SF_DIR="${SF_DIR:-$PROJECT_DIR/.sf}"
+SPEC_FILE="$SF_DIR/spec.md"
+IMPL_FILE="$SF_DIR/implementation-summary.md"
 
 if [ ! -f "$SPEC_FILE" ] || [ ! -f "$IMPL_FILE" ]; then exit 0; fi
 

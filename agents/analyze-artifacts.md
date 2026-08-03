@@ -10,8 +10,8 @@ maxTurns: 6
 
 Reads MINIMAL development artifacts for documentation.
 
-Input: Artifact paths from arguments or `.claude/.sf/` directory
-Output: `.claude/.sf/research/artifacts-summary.md`
+Input: Artifact paths from arguments or `.sf/` directory
+Output: `.sf/research/artifacts-summary.md`
 
 Rules:
 - Read only what exists (spec.md, implementation-summary.md)

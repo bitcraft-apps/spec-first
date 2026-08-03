@@ -10,10 +10,10 @@ maxTurns: 15
 Merges research docs into existing project docs. Prefer updating over creating.
 
 Inputs:
-- `.claude/.sf/research/technical-docs.md`
-- `.claude/.sf/research/user-docs.md`
-- `.claude/.sf/research/docs-inventory.md` (existing doc manifest)
-- `.claude/.sf/research/doc-context.md` (shared terminology, if present)
+- `.sf/research/technical-docs.md`
+- `.sf/research/user-docs.md`
+- `.sf/research/docs-inventory.md` (existing doc manifest)
+- `.sf/research/doc-context.md` (shared terminology, if present)
 
 Rules:
 - Read docs-inventory.md first — match topics against existing files

@@ -61,7 +61,7 @@ run_spec_dir() {
 
     run run_spec_dir "$TEST_DIR/repo/sub"
     [ "$status" -eq 0 ]
-    [ -d "$TEST_DIR/repo/.claude/.sf/research" ]
+    [ -d "$TEST_DIR/repo/.sf/research" ]
 }
 
 @test "manage-spec-directory names the markers when no root exists" {
@@ -117,11 +117,11 @@ run_spec_dir() {
     # Check it guards on .git existence
     grep -q '\.git"' "$agent_file"
 
-    # Check it appends exact pattern .claude/.sf/
-    grep -qF '.claude/.sf/' "$agent_file"
+    # Check it appends exact pattern .sf/
+    grep -qF '.sf/' "$agent_file"
 
     # Check it skips if already present (negated grep guard)
-    grep -q '! grep -qF .*.claude/.sf/' "$agent_file"
+    grep -q '! grep -qF .*.sf/' "$agent_file"
 }
 
 @test "framework validation recognizes manage-spec-directory agent" {

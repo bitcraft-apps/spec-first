@@ -6,7 +6,7 @@
 - 7 research agents use the Haiku model.
 - 5 synthesis and implementation agents use the model of the caller.
 - 1 built-in Explore subagent finds patterns.
-- All agents write their output to `.claude/.sf/research/`. Git ignores this directory.
+- All agents write their output to `.sf/research/`. Git ignores this directory.
 
 ## Commands
 
@@ -24,7 +24,7 @@ Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `descript
 
 ### pattern-example.md
 
-In `/sf:implement`, Explore (Step 1) writes `.claude/.sf/research/pattern-example.md`. Then `implement-minimal` (Step 2) reads it. The file uses free-form markdown. `skills/implement/SKILL.md` and `agents/implement-minimal.md` refer to it.
+In `/sf:implement`, Explore (Step 1) writes `.sf/research/pattern-example.md`. Then `implement-minimal` (Step 2) reads it. The file uses free-form markdown. `skills/implement/SKILL.md` and `agents/implement-minimal.md` refer to it.
 
 ### plugin.json
 
@@ -100,14 +100,18 @@ The `Stop` event runs two hooks: validate-spec and validate-implementation.
 - Haiku model access for research agents
 - LSP is optional. If LSP is not available, `analyze-implementation` uses Grep and Glob.
 
+### Artifact directory
+
+The artifact directory is `$SF_DIR` if you set that variable. If you do not set it, the
+directory is `.sf/` in the project root.
+
 ### .gitignore
 
 ```gitignore
 .sf/
-.claude/.sf/
 ```
 
-The two entries keep SF artifacts out of the repository.
+This entry keeps SF artifacts out of the repository.
 
 ### Validation
 
