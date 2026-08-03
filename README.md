@@ -71,7 +71,7 @@ Updated: docs/middleware.md (added rate limiter section)
 
 ## How it works
 
-Each command starts specialized agents. The agents run in parallel when possible. The spec controls the implement step. Claude Code does not write code without a spec.
+Each command starts specialized agents. The agents run in parallel when possible. On a host without subagents, one agent does the same steps in order. The spec controls the implement step. Claude Code does not write code without a spec.
 
 ## Token Usage
 

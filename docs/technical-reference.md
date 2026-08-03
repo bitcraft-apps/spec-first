@@ -10,7 +10,9 @@
 
 ## Commands
 
-The `skills/` directory defines the commands. Each `SKILL.md` defines the agent orchestration, the batching, and the gates.
+The `skills/` directory defines the commands. Each `SKILL.md` gives the steps and the gates twice: first as one sequential path that any host can run, then as the subagent path under `## On Claude Code`. The subagent path is an optimization.
+
+The steps below are the Claude Code path.
 
 - `/sf:spec [REQUIREMENTS]` runs the research agents in parallel. Then it synthesizes `spec.md`.
 - `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
@@ -96,7 +98,7 @@ The `Stop` event runs two hooks: validate-spec and validate-implementation.
 
 ## Setup
 
-- Claude Code CLI with `Agent` tool support (`subagent_type`)
+- Claude Code CLI. `Agent` tool support (`subagent_type`) makes the commands run the steps in parallel. Without it, the skills run the same steps in order.
 - Haiku model access for research agents
 - LSP is optional. If LSP is not available, `analyze-implementation` uses Grep and Glob.
 

@@ -7,41 +7,41 @@ argument-hint: "[--isolate] [SPECIFICATION_OR_PATH]"
 
 # Implement Command
 
-Creates minimal implementation following existing patterns.
+Creates a minimal implementation that follows the existing patterns. One agent does the steps
+in order.
 
 ## Usage
 ```
 /sf:implement [--isolate] [SPECIFICATION_OR_PATH]
 ```
 
----
+## Context
 
-## Project Context
-- Branch: !`git branch --show-current 2>/dev/null`
-- Spec exists: !`test -f .sf/spec.md && echo "yes" || echo "no"`
+Read the current branch. Check whether `.sf/spec.md` exists.
 
 ## Input Resolution
 
-**Input Resolution:**
-
-1. Parse $ARGUMENTS: If `--isolate` is present, set ISOLATE=true and strip it from remaining args
-2. If remaining args provided: Use as specification path or inline requirements
-3. Else if `.sf/spec.md` exists: Use it
-4. Else: Use **AskUserQuestion** tool to ask for specification location
+1. If the skill has arguments: use them as a specification path or as inline requirements
+2. Else if `.sf/spec.md` exists: use it
+3. Else: ask the user where the specification is. Wait for the answer.
 
 ## Execution
 
-After input resolution, run sequential agents:
+**Step 1 — Learn**
+- Search the codebase for the closest existing pattern for this specification. Stop when you
+  have one good example. Do not survey the whole repository.
+- Write the example to `.sf/research/pattern-example.md`.
 
-**Step 1: Learn**
-- Use Agent tool with subagent_type="Explore" to find similar patterns in the codebase for: $SPECIFICATION (request "medium" thoroughness in the prompt)
-- Save findings to `.sf/research/pattern-example.md`
-
-**Step 2: Implement**
-- If ISOLATE is true: Task: implement-minimal with spec: $SPECIFICATION, isolation: "worktree"
-- Else: Task: implement-minimal with spec: $SPECIFICATION
+**Step 2 — Implement**
+- Follow the pattern you found. No creativity.
+- Write the simplest change that works. No abstractions for later. One feature at a time.
+- Test that it works.
+- Write `.sf/implementation-summary.md`.
 
 Output: Implementation + `.sf/implementation-summary.md`
+
+If Step 1 finds no pattern: create the basic file structure the language expects, implement only
+the core requirement, and note in the summary: "No existing patterns found - used minimal approach".
 
 ## Philosophy
 
@@ -50,10 +50,17 @@ This command enforces:
 - Working code over perfect code
 - Minimal solution over extensible solution
 
-## Error Recovery
+## On Claude Code
 
-If exploration finds no patterns:
-1. implement-minimal creates basic file structure following language conventions
-2. Implements only the core requirement (no extras)
-3. Uses standard naming patterns for the technology
-4. Notes in summary: "No existing patterns found - used minimal approach"
+Claude Code has subagents. Use them for both steps.
+
+Context arrives for free:
+- Branch: !`git branch --show-current 2>/dev/null`
+- Spec exists: !`test -f .sf/spec.md && echo "yes" || echo "no"`
+
+- Parse $ARGUMENTS. `--isolate` is a Claude-only flag: strip it and set ISOLATE=true.
+- Use the **AskUserQuestion** tool to ask for the specification location.
+- Step 1: use the Agent tool with subagent_type="Explore" to find the pattern for $SPECIFICATION
+  (request "medium" thoroughness in the prompt).
+- Step 2: Task: implement-minimal with spec: $SPECIFICATION. If ISOLATE is true, add
+  isolation: "worktree".
