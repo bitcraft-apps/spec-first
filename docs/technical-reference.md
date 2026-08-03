@@ -94,7 +94,10 @@ Schema:
 
 Hook commands use `${CLAUDE_PLUGIN_ROOT}` as a path prefix. At run time, Claude Code replaces this prefix with the install directory of the plugin. Thus the hook scripts do not contain absolute paths.
 
-The `Stop` event runs two hooks: validate-spec and validate-implementation.
+The `Stop` event runs two hooks: validate-spec and validate-implementation. Each hook is an
+adapter. It reads the hook JSON, calls the matching script in `scripts/`, and reports a non-zero
+exit as a `block` decision. The skills call the same scripts, so hosts without hooks get the
+same checks.
 
 ## Setup
 
@@ -116,6 +119,11 @@ the directory from its second argument, then `$SF_DIR`, then the project root.
 research files. It exits non-zero and prints the reason if a file is missing, or if a generated
 doc contains a placeholder marker. The script reads the directory from its second argument,
 then `$SF_DIR`, then `.sf` in the current directory.
+
+`scripts/validate-spec.sh [sf-dir]` checks that `spec.md` has a scope, criteria and risks
+section. `scripts/validate-implementation.sh [sf-dir]` counts the acceptance criteria that
+`spec.md` still has unchecked. Both exit non-zero and print the reason to stderr. Both read the
+directory from their first argument, then `$SF_DIR`, then `.sf` in the current directory.
 
 ### .gitignore
 

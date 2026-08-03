@@ -3,6 +3,7 @@ name: implement
 description: Implement through pattern learning
 disable-model-invocation: true
 argument-hint: "[--isolate] [SPECIFICATION_OR_PATH]"
+allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-implementation.sh:*)
 ---
 
 # Implement Command
@@ -38,6 +39,11 @@ Read the current branch. Check whether `.sf/spec.md` exists.
 - Test that it works.
 - Write `.sf/implementation-summary.md`.
 
+**Gate — Post-Implementation:** run `validate-implementation.sh`. The script is at `../../scripts/`
+relative to this skill directory.
+**If validate-implementation.sh fails (non-zero exit), check every criterion the spec meets, or
+finish the work it names. Do not report the implementation as done.**
+
 Output: Implementation + `.sf/implementation-summary.md`
 
 If Step 1 finds no pattern: create the basic file structure the language expects, implement only
@@ -64,3 +70,4 @@ Context arrives for free:
   (request "medium" thoroughness in the prompt).
 - Step 2: Task: implement-minimal with spec: $SPECIFICATION. If ISOLATE is true, add
   isolation: "worktree".
+- Gate: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-implementation.sh ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`

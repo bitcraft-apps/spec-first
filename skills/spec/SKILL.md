@@ -3,7 +3,7 @@ name: spec
 description: Create specifications through parallel analysis
 disable-model-invocation: true
 argument-hint: "[REQUIREMENTS]"
-allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*)
+allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*), Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-spec.sh:*)
 ---
 
 # Spec Command
@@ -11,9 +11,8 @@ allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*)
 Creates a specification from requirements. One agent does the steps in order.
 
 ## Usage
-```
-/sf:spec [REQUIREMENTS]
-```
+
+`/sf:spec [REQUIREMENTS]`
 
 ## Context
 
@@ -23,9 +22,8 @@ Check whether `.sf/spec.md` exists.
 ## Clarification Check
 
 If the requirements are vague (fewer than 15 words, or unclear), ask the user before you start.
-Wait for the answer. Do not assume.
+Wait for the answer. Do not assume. Ask about:
 
-**Questions to consider asking:**
 - What specific problem are you solving?
 - Who are the users?
 - What's the desired outcome?
@@ -41,7 +39,6 @@ Pick the mode:
 - `.sf/spec.md` exists → ask the user: "Update existing" / "Create new" → `update` / `new`
 
 Run `spec-dir.sh <first|update|new>`, at `../../scripts/` relative to this skill directory.
-The script finds the project root itself.
 **If spec-dir.sh fails (non-zero exit), halt immediately — do not do the work below.**
 
 ## Execution
@@ -53,6 +50,9 @@ Write each file in turn. The requirements are the input to this skill.
 3. `.sf/research/risks.md` — blockers only, not every possible risk.
 4. `$SF_DIR/spec.md` — merge the three files. Keep it under 50 lines. Use the structure in
    `spec-template.md`, next to this file.
+
+**Gate — Post-Spec:** run `validate-spec.sh`, at `../../scripts/` relative to this skill directory.
+**If it fails (non-zero exit), add the sections it names, then run it again. Do not report done.**
 
 Output: `$SF_DIR/spec.md` (direct file or symlink to timestamped spec)
 
@@ -72,3 +72,4 @@ Context arrives for free:
 - Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
 - Batch 1 (Parallel): define-scope, create-criteria, identify-risks — each with requirements: $ARGUMENTS
 - Batch 2: synthesize-spec, following `${CLAUDE_SKILL_DIR}/spec-template.md`
+- Gate: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-spec.sh ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
