@@ -55,6 +55,22 @@ assert 'version' in data, 'missing version'
     done
 }
 
+@test "agents that declare an output file have Write" {
+    for agent in "$PROJECT_ROOT/agents/"*.md; do
+        # Only agents whose Output line names a .md file. manage-spec-directory
+        # outputs a directory and creates it with Bash.
+        grep -q "^Output:.*\.md" "$agent" || continue
+
+        local frontmatter
+        frontmatter=$(sed -n '/^---$/,/^---$/p' "$agent" | sed '1d;$d')
+
+        echo "$frontmatter" | grep "^tools:" | grep -q "Write" || {
+            echo "$(basename "$agent") declares an output file but has no Write tool" >&2
+            return 1
+        }
+    done
+}
+
 @test "skill frontmatter is parseable YAML" {
     for skill_dir in "$PROJECT_ROOT/skills/"*/; do
         local skill_file="$skill_dir/SKILL.md"

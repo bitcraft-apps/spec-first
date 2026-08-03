@@ -1,7 +1,7 @@
 ---
 name: analyze-artifacts
 description: Read and parse SF artifacts (spec, criteria, risks). Use when documentation needs context from the spec phase.
-tools: Read
+tools: Read, Write
 model: haiku
 maxTurns: 6
 ---
