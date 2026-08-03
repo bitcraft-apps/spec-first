@@ -44,11 +44,8 @@ case $MODE in
         mkdir -p "$SF_DIR/specs/$timestamp"
         mv "$SF_DIR/spec.md" "$SF_DIR/specs/$timestamp/" 2>/dev/null
         mv "$SF_DIR/research/" "$SF_DIR/specs/$timestamp/" 2>/dev/null
-        ln -sf "specs/$timestamp/spec.md" "$SF_DIR/spec.md" && \
-        ln -sf "specs/$timestamp/research/" "$SF_DIR/research" || {
-            rm -rf "$SF_DIR/specs/$timestamp/"
-            echo "Error: Failed to create symlinks" && exit 1
-        }
+        ln -sf "specs/$timestamp/spec.md" "$SF_DIR/spec.md" && ln -sf "specs/$timestamp/research/" "$SF_DIR/research" || {
+            rm -rf "$SF_DIR/specs/$timestamp/"; echo "Error: Failed to create symlinks" >&2; exit 1; }
         ;;
 esac
 mkdir -p "$SF_DIR/research/"
