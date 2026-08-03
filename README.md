@@ -1,12 +1,14 @@
 # spec-first
 
-Write the requirements before you write the code. This Claude Code plugin gives you a workflow with three steps. First, define what to build. Then implement it from the spec. Last, generate the documentation. All steps run in your terminal.
+Write the requirements before you write the code. Spec First gives you a workflow with three steps. First, define what to build. Then implement it from the spec. Last, generate the documentation. All steps run in your terminal.
 
 ## Who is this for
 
-Use this plugin if you want Claude Code to build from clear requirements.
+Use Spec First if you want your coding agent to build from clear requirements.
 
 ## Quick Start
+
+### Claude Code
 
 Add the marketplace. Then install the plugin from your terminal:
 
@@ -32,7 +34,7 @@ git clone https://github.com/bitcraft-apps/spec-first && cd spec-first
 ./scripts/install.sh --dir .agents/skills    # one project only
 ```
 
-Hosts that read this location include pi, opencode, Codex CLI, GitHub Copilot CLI and Gemini CLI. More hosts add support over time. Check the skill documentation of your host for the directories it reads, then pass one with `--dir`.
+See [Supported hosts](#supported-hosts) for the host list.
 
 A checkout installs by symlink. A downloaded release installs by copy. To remove the skills, delete them:
 
@@ -89,7 +91,7 @@ Updated: docs/middleware.md (added rate limiter section)
 
 ## How it works
 
-Each command starts specialized agents. The agents run in parallel when possible. On a host without subagents, one agent does the same steps in order. The spec controls the implement step. Claude Code does not write code without a spec.
+Each command gives the same steps and the same checks to every host. One agent does the steps in order. On Claude Code, specialized subagents run the same steps in parallel. The spec controls the implement step. The agent does not write code without a spec.
 
 ## Token Usage
 
@@ -111,6 +113,12 @@ Your token counts change with the size of the codebase, the complexity of the fe
 | `/sf:implement [--isolate] [SPEC_OR_PATH]` | Build the minimal working solution |
 | `/sf:document [PATHS]` | Generate documentation for the change |
 
-## Requirements
+## Supported hosts
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
+| Host | Install | What runs |
+|------|---------|-----------|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | `claude plugin install sf@spec-first` | The three commands, parallel subagents, and validation hooks |
+| pi, opencode, Codex CLI, GitHub Copilot CLI, Gemini CLI, Cursor, Zed, Amp, Goose, Crush, Kilo Code, Warp, Factory Droid, OpenHands | `./scripts/install.sh` — `.agents/skills` | The three commands in order. The skills call the validation scripts, so the same checks run. |
+| Any other host with a skills directory | `./scripts/install.sh --dir <dir>` | Same as above |
+
+Some hosts read a different directory. Cline, Qwen Code and iFlow CLI need `--dir`. Check the skill documentation of your host for the directories it reads, then pass one with `--dir`.

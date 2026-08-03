@@ -1,7 +1,7 @@
 {
   "name": "sf",
   "version": "1.3.1",
-  "description": "Claude Code plugin that guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal.",
+  "description": "Guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal.",
   "author": {
     "name": "Szymon Graczyk",
     "url": "https://github.com/bitcraft-apps"
@@ -12,7 +12,7 @@
   "keywords": [
     "spec-driven development",
     "requirements",
-    "Claude Code plugin",
+    "agent skills",
     "code generation",
     "documentation"
   ]
