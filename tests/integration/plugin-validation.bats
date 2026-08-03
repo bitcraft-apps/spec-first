@@ -57,8 +57,7 @@ assert 'version' in data, 'missing version'
 
 @test "agents that declare an output file have Write" {
     for agent in "$PROJECT_ROOT/agents/"*.md; do
-        # Only agents whose Output line names a .md file. manage-spec-directory
-        # outputs a directory and creates it with Bash.
+        # Only agents whose Output line names a .md file.
         grep -q "^Output:.*\.md" "$agent" || continue
 
         local frontmatter

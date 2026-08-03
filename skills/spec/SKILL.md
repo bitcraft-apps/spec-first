@@ -3,6 +3,7 @@ name: spec
 description: Create specifications through parallel analysis
 disable-model-invocation: true
 argument-hint: "[REQUIREMENTS]"
+allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*)
 ---
 
 # Spec Command
@@ -20,6 +21,7 @@ Creates specifications with intelligent clarification.
 - Branch: !`git branch --show-current 2>/dev/null`
 - Recent commits: !`git log --oneline -5 2>/dev/null`
 - Working tree: !`git status --short 2>/dev/null | head -20`
+- Existing spec: !`test -f .sf/spec.md && echo "yes" || echo "no"`
 
 ## Clarification Check
 
@@ -39,13 +41,13 @@ Claude Code will use `.sf/` as the working directory.
 **Command-level logic:**
 
 ```
-If .sf/spec.md exists:
+If Existing spec is "yes":
     Use AskUserQuestion tool: "Existing spec found. What would you like to do?"
       Options: "Update existing" / "Create new"
-    If user chooses update: Write "update" to .sf/mode
-    If user chooses new: Write "new" to .sf/mode
+    "Update existing" → MODE=update
+    "Create new" → MODE=new
 Else:
-    Write "first" to .sf/mode
+    MODE=first
 ```
 
 ## Execution
@@ -53,8 +55,9 @@ Else:
 After directory setup and clarification (if needed), run agents:
 
 **Pre-execution:**
-- Task: manage-spec-directory (reads mode from $SF_DIR/mode file)
-- **If manage-spec-directory fails (non-zero exit), halt immediately — do not run downstream agents.**
+- Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
+  The script finds the project root itself if `CLAUDE_PROJECT_DIR` is not set.
+- **If spec-dir.sh fails (non-zero exit), halt immediately — do not run downstream agents.**
 
 **Batch 1 (Parallel):**
 - Task: define-scope with requirements: $ARGUMENTS

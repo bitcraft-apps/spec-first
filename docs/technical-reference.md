@@ -105,6 +105,11 @@ The `Stop` event runs two hooks: validate-spec and validate-implementation.
 The artifact directory is `$SF_DIR` if you set that variable. If you do not set it, the
 directory is `.sf/` in the project root.
 
+`scripts/spec-dir.sh <first|update|new> [sf-dir]` prepares the directory. `first` creates it.
+`update` backs up the spec and clears `research/`. `new` archives the spec under
+`specs/<timestamp>/` and replaces `spec.md` and `research/` with symlinks. The script reads
+the directory from its second argument, then `$SF_DIR`, then the project root.
+
 ### .gitignore
 
 ```gitignore
