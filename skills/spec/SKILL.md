@@ -38,7 +38,7 @@ Pick the mode:
 - No `.sf/spec.md` → `first`
 - `.sf/spec.md` exists → ask the user: "Update existing" / "Create new" → `update` / `new`
 
-Run `spec-dir.sh <first|update|new>`, at `../../scripts/` relative to this skill directory.
+Run `scripts/spec-dir.sh <first|update|new>`, in this skill directory.
 **If spec-dir.sh fails (non-zero exit), halt immediately — do not do the work below.**
 
 ## Execution
@@ -51,7 +51,7 @@ Write each file in turn. The requirements are the input to this skill.
 4. `$SF_DIR/spec.md` — merge the three files. Keep it under 50 lines. Use the structure in
    `spec-template.md`, next to this file.
 
-**Gate — Post-Spec:** run `validate-spec.sh`, at `../../scripts/` relative to this skill directory.
+**Gate — Post-Spec:** run `scripts/validate-spec.sh`, in this skill directory.
 **If it fails (non-zero exit), add the sections it names, then run it again. Do not report done.**
 
 Output: `$SF_DIR/spec.md` (direct file or symlink to timestamped spec)

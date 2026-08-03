@@ -1,6 +1,6 @@
 # Makefile for Spec First
 
-.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup validate clean
+.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup install validate clean
 
 # Default target
 help:
@@ -18,6 +18,7 @@ help:
 	@echo "  test-parallel     Run tests in parallel"
 	@echo ""
 	@echo "  setup             Initialize git submodules and setup"
+	@echo "  install           Install the skills for pi, opencode and Copilot CLI"
 	@echo "  validate          Validate framework configuration"
 	@echo "  clean             Clean up test artifacts"
 	@echo ""
@@ -84,6 +85,11 @@ test-parallel: setup
 	@echo "🧪 Running BATS test suite (parallel)..."
 	cd tests && ./run-tests.sh --parallel $(if $(FILTER),--filter $(FILTER))
 
+
+# Install skills for hosts that read ~/.agents/skills
+# Pass options with ARGS, for example: make install ARGS="--dir .agents/skills"
+install:
+	@./scripts/install.sh $(ARGS)
 
 # Validate framework
 validate: setup

@@ -1,0 +1,1 @@
+../../../scripts/spec-dir.sh

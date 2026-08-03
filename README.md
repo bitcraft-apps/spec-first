@@ -22,6 +22,22 @@ Or run these commands in Claude Code:
 /plugin install sf@spec-first
 ```
 
+### Other hosts
+
+pi, opencode and GitHub Copilot CLI read skills from `~/.agents/skills`. Install them from a checkout:
+
+```bash
+git clone https://github.com/bitcraft-apps/spec-first && cd spec-first
+./scripts/install.sh                         # ~/.agents/skills — all three hosts
+./scripts/install.sh --dir .agents/skills    # one project only
+```
+
+A checkout installs by symlink. A downloaded release installs by copy. To remove the skills, delete them:
+
+```bash
+rm -rf ~/.agents/skills/{spec,implement,document}
+```
+
 Write your first spec:
 
 ```
