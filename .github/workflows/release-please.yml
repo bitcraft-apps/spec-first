@@ -7,10 +7,10 @@ on:
 permissions:
   contents: read
 
-# Cancel in-progress runs when a new run is triggered
+# Queue runs. A cancelled run can leave a tag or release without its PR.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: release-please
+  cancel-in-progress: false
 
 jobs:
   release-please:
