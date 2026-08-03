@@ -333,9 +333,16 @@ cd tests && ./run-tests.sh --tap
 The automated tests check that the install script writes the files. They do not check that a host
 loads them. Do this check by hand before a release.
 
-**Use an interactive session.** A headless print mode is not a valid substitute. GitHub Copilot
-CLI 0.0.346 in `-p` mode loaded no skill at all, not even a minimal probe skill placed in the
-directory it reads. A pass in print mode therefore proves nothing.
+**Use an interactive session.** A headless print mode fails for two different reasons, both
+observed:
+
+- GitHub Copilot CLI 0.0.346 with `-p` loaded no skill at all, not even a minimal probe skill in
+  the directory it reads. A print-mode result there says nothing about the skills.
+- pi 0.83.0 with `-p` loaded the skill and then hung until killed. The skills do not pre-approve
+  the validation scripts, so the host asks permission, and print mode has no way to answer.
+
+The skills also ask the user to choose when a spec already exists. That needs a session that can
+answer.
 
 sf reaches hosts by two separate paths. Check the path you changed.
 
