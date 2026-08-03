@@ -32,10 +32,10 @@ teardown() {
 }
 
 @test "manage-spec-directory agent follows framework constraints" {
-    # Agent should be under 40 lines (allowing for project-local path detection + gitignore logic)
+    # Agent should be under 45 lines (allowing for root resolution + gitignore logic)
     local agent_file="$PROJECT_ROOT/agents/manage-spec-directory.md"
     local code_lines=$(sed -n '/```bash/,/```/p' "$agent_file" | grep -v '```' | grep -v '^#' | grep -v '^$' | wc -l)
-    [ "$code_lines" -le 40 ]
+    [ "$code_lines" -le 45 ]
 }
 
 @test "manage-spec-directory agent includes error recovery" {
@@ -48,12 +48,36 @@ teardown() {
     grep -q "rm -f.*mode" "$agent_file"
 }
 
-@test "manage-spec-directory agent validates CLAUDE.md exists" {
-    local agent_file="$PROJECT_ROOT/agents/manage-spec-directory.md"
+# Extract the agent's bash block and run it in $1, without any Claude variable
+run_spec_dir() {
+    sed -n '/```bash/,/```/p' "$PROJECT_ROOT/agents/manage-spec-directory.md" \
+        | grep -v '```' > "$TEST_DIR/spec-dir.sh"
+    (cd "$1" && env -u CLAUDE_PROJECT_DIR bash "$TEST_DIR/spec-dir.sh")
+}
 
-    # Check for CLAUDE.md existence validation with non-zero exit
-    grep -q 'CLAUDE.md not found' "$agent_file"
-    grep -q 'exit 1' "$agent_file"
+@test "manage-spec-directory resolves the root from AGENTS.md" {
+    mkdir -p "$TEST_DIR/repo/sub"
+    touch "$TEST_DIR/repo/AGENTS.md"
+
+    run run_spec_dir "$TEST_DIR/repo/sub"
+    [ "$status" -eq 0 ]
+    [ -d "$TEST_DIR/repo/.claude/.sf/research" ]
+}
+
+@test "manage-spec-directory names the markers when no root exists" {
+    run run_spec_dir "$TEST_DIR"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *".git"* ]]
+    [[ "$output" == *"AGENTS.md"* ]]
+    [[ "$output" == *"CLAUDE.md"* ]]
+}
+
+@test "manage-spec-directory uses SF_DIR when the caller sets it" {
+    export SF_DIR="$TEST_DIR/custom"
+
+    run run_spec_dir "$TEST_DIR"
+    [ "$status" -eq 0 ]
+    [ -d "$TEST_DIR/custom/research" ]
 }
 
 @test "manage-spec-directory agent validates directory is writable" {
