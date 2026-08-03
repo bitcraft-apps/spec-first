@@ -12,16 +12,17 @@ Modes: **first** (create initial dir), **update** (backup spec, clear research),
 
 ## Implementation
 ```bash
-# Find project root (directory containing CLAUDE.md)
-PROJECT_ROOT="$(pwd)"
-while [ "$PROJECT_ROOT" != "/" ]; do
-    [ -f "$PROJECT_ROOT/CLAUDE.md" ] && break
-    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
-done
-[ "$PROJECT_ROOT" = "/" ] && echo "Error: CLAUDE.md not found in any parent directory" >&2 && exit 1
-SF_DIR="$PROJECT_ROOT/.claude/.sf"
+# Resolve the artifact directory: $SF_DIR, then ${CLAUDE_PROJECT_DIR}, then a marker walk
+if [ -z "$SF_DIR" ]; then
+    PROJECT_ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+    while [ ! -e "$PROJECT_ROOT/.git" ] && [ ! -f "$PROJECT_ROOT/AGENTS.md" ] && [ ! -f "$PROJECT_ROOT/CLAUDE.md" ]; do
+        [ "$PROJECT_ROOT" = "/" ] && { echo "Error: project root not found. Looked for .git, AGENTS.md or CLAUDE.md in $(pwd) and every parent directory." >&2; exit 1; }
+        PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+    done
+    SF_DIR="$PROJECT_ROOT/.claude/.sf"
+    [ -d "$PROJECT_ROOT/.git" ] && [ -f "$PROJECT_ROOT/.gitignore" ] && ! grep -qF '.claude/.sf/' "$PROJECT_ROOT/.gitignore" && echo '.claude/.sf/' >> "$PROJECT_ROOT/.gitignore"
+fi
 mkdir -p "$SF_DIR" 2>/dev/null || { echo "Error: Cannot create or write to $SF_DIR" >&2; exit 1; }
-[ -d "$PROJECT_ROOT/.git" ] && [ -f "$PROJECT_ROOT/.gitignore" ] && ! grep -qF '.claude/.sf/' "$PROJECT_ROOT/.gitignore" && echo '.claude/.sf/' >> "$PROJECT_ROOT/.gitignore"
 if [ -f "$SF_DIR/mode" ]; then
     MODE=$(cat "$SF_DIR/mode")
 elif [ -f "$SF_DIR/spec.md" ]; then
