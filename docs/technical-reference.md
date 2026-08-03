@@ -2,29 +2,33 @@
 
 ## Overview
 
-3 commands orchestrate 13 agent invocations. 7 research agents run on Haiku; 5 synthesis/implementation agents use the caller's model. 1 built-in Explore subagent handles pattern discovery. All output goes to `.claude/.sf/research/` (gitignored).
+- 3 commands start 13 agent invocations.
+- 7 research agents use the Haiku model.
+- 5 synthesis and implementation agents use the model of the caller.
+- 1 built-in Explore subagent finds patterns.
+- All agents write their output to `.claude/.sf/research/`. Git ignores this directory.
 
 ## Commands
 
-Commands are defined as skills in `skills/`. Each `SKILL.md` is the source of truth for agent orchestration, batching, and gates.
+The `skills/` directory defines the commands. Each `SKILL.md` defines the agent orchestration, the batching, and the gates.
 
-- `/sf:spec [REQUIREMENTS]` — parallel research → synthesis into `spec.md`
-- `/sf:implement [SPEC_OR_PATH]` — Explore subagent for patterns → `implement-minimal` for code
-- `/sf:document [PATHS]` — parallel analysis → parallel doc generation → integration into `docs/`
+- `/sf:spec [REQUIREMENTS]` runs the research agents in parallel. Then it synthesizes `spec.md`.
+- `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
+- `/sf:document [PATHS]` runs the analysis agents in parallel. Then it generates the documents in parallel. Then it integrates the documents into `docs/`.
 
 ## Agents
 
-Agent files live in `agents/`. Each has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). See agent files for details — they are the source of truth.
+Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). Read the agent files for the details.
 
 ## Integration Contracts
 
 ### pattern-example.md
 
-`.claude/.sf/research/pattern-example.md` is the handoff between Explore (Step 1) and `implement-minimal` (Step 2) in `/sf:implement`. Free-form markdown. Referenced in `skills/implement/SKILL.md` and `agents/implement-minimal.md`.
+In `/sf:implement`, Explore (Step 1) writes `.claude/.sf/research/pattern-example.md`. Then `implement-minimal` (Step 2) reads it. The file uses free-form markdown. `skills/implement/SKILL.md` and `agents/implement-minimal.md` refer to it.
 
 ### plugin.json
 
-`.claude-plugin/plugin.json` declares the framework's component inventory: agents, skills, and hooks. `validate-plugin.sh` reads it to enumerate files instead of maintaining separate lists.
+`.claude-plugin/plugin.json` declares the components of the framework: agents, skills, and hooks. `validate-plugin.sh` reads this file to find the component files. This removes the need for separate lists.
 
 Schema:
 
@@ -37,15 +41,15 @@ Schema:
 }
 ```
 
-Agents and skills use default directory auto-discovery (`agents/`, `skills/`) and are not listed in the manifest.
+Claude Code finds the agents and the skills in their default directories: `agents/` and `skills/`. The manifest does not list them.
 
-**Fallback behavior:** If the manifest is missing, invalid JSON, or `jq` is not installed, `validate-plugin.sh` falls back to hardcoded arrays.
+**Default behavior:** `validate-plugin.sh` uses hardcoded arrays in three conditions. The manifest is missing. The manifest holds invalid JSON. Or `jq` is not installed.
 
-**Version drift:** `validate-plugin.sh` checks that `plugin.json` version matches `VERSION` and fails validation if they differ. This check only runs in repository mode.
+**Version drift:** `validate-plugin.sh` compares the `plugin.json` version to `VERSION`. If the two versions differ, the validation fails. This check runs only in repository mode.
 
 ### marketplace.json
 
-`.claude-plugin/marketplace.json` — marketplace catalog for plugin discovery. Enables `claude plugin add bitcraft-apps/spec-first`.
+`.claude-plugin/marketplace.json` is the catalog that users search to find the plugin. It makes the command `claude plugin add bitcraft-apps/spec-first` possible.
 
 Schema:
 
@@ -62,9 +66,9 @@ Schema:
 }
 ```
 
-Plugin version is auto-synced by release-please alongside `plugin.json`. `validate-plugin.sh` checks consistency.
+release-please updates the version field in `marketplace.json` and in `plugin.json`. `validate-plugin.sh` checks that the two versions agree.
 
-**Relationship to plugin.json:** `marketplace.json` is the catalog (how users discover and install the plugin). `plugin.json` is the manifest (what the plugin provides). Both have version fields kept in sync automatically.
+**Relationship to plugin.json:** `marketplace.json` is the catalog. Users search it to find and install the plugin. `plugin.json` is the manifest. It declares what the plugin provides.
 
 ### hooks.json
 
@@ -86,15 +90,15 @@ Schema:
 }
 ```
 
-Hook commands use `${CLAUDE_PLUGIN_ROOT}` as a path prefix. Claude Code resolves this to the plugin's install directory at runtime, so hook scripts do not contain absolute paths.
+Hook commands use `${CLAUDE_PLUGIN_ROOT}` as a path prefix. At run time, Claude Code replaces this prefix with the install directory of the plugin. Thus the hook scripts do not contain absolute paths.
 
-Current events: `Stop` (2 hooks: validate-spec, validate-implementation).
+The `Stop` event runs two hooks: validate-spec and validate-implementation.
 
 ## Setup
 
 - Claude Code CLI with `Agent` tool support (`subagent_type`)
 - Haiku model access for research agents
-- LSP is optional — `analyze-implementation` falls back to Grep/Glob
+- LSP is optional. If LSP is not available, `analyze-implementation` uses Grep and Glob.
 
 ### .gitignore
 
@@ -103,7 +107,7 @@ Current events: `Stop` (2 hooks: validate-spec, validate-implementation).
 .claude/.sf/
 ```
 
-Both entries prevent SF artifacts from being committed.
+The two entries keep SF artifacts out of the repository.
 
 ### Validation
 
