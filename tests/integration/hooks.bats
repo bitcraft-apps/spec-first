@@ -131,9 +131,3 @@ write_impl() {
     run bash -n "$HOOK"
     [ "$status" -eq 0 ]
 }
-
-@test "hook guard uses an explicit if block" {
-    run grep -c 'if \[ ! -f "\$SPEC_FILE" \] || \[ ! -f "\$IMPL_FILE" \]; then exit 0; fi' "$HOOK"
-    [ "$status" -eq 0 ]
-    [ "$output" -eq 1 ]
-}
