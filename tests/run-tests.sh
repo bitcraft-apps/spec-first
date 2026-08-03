@@ -100,7 +100,7 @@ check_prerequisites() {
     echo "🔍 Checking test prerequisites..."
     
     # Check if we're in the right directory
-    if [ ! -f "$PROJECT_ROOT/CLAUDE.md" ]; then
+    if [ ! -f "$PROJECT_ROOT/AGENTS.md" ]; then
         echo -e "${RED}❌ Not in Spec First repository${NC}" >&2
         exit 1
     fi

@@ -10,10 +10,10 @@ if [ -z "$PROJECT_ROOT" ]; then
         SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
     else
-        # Fallback: search upward for CLAUDE.md
+        # Fallback: search upward for AGENTS.md
         CURRENT_DIR="$(pwd)"
         while [ "$CURRENT_DIR" != "/" ]; do
-            if [ -f "$CURRENT_DIR/CLAUDE.md" ]; then
+            if [ -f "$CURRENT_DIR/AGENTS.md" ]; then
                 PROJECT_ROOT="$CURRENT_DIR"
                 break
             fi
@@ -49,7 +49,7 @@ test_error() {
 
 # Project validation
 validate_project_root() {
-    if [ -z "$PROJECT_ROOT" ] || [ ! -f "$PROJECT_ROOT/CLAUDE.md" ]; then
+    if [ -z "$PROJECT_ROOT" ] || [ ! -f "$PROJECT_ROOT/AGENTS.md" ]; then
         test_error "Cannot find Spec First project root"
         return 1
     fi
