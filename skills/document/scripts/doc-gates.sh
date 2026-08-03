@@ -1,0 +1,1 @@
+../../../scripts/doc-gates.sh

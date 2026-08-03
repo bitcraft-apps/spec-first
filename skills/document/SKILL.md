@@ -34,8 +34,7 @@ Write each file in turn. All paths are under `$SF_DIR/research/`.
 2. `implementation-summary.md` — the real code structure: the main files, the changed interfaces.
 3. `docs-inventory.md` — every existing doc as `filepath | primary topic`, from the headings only.
 
-**Gate 1 — Post-Analysis:** run `doc-gates.sh analysis`. The script is at `../../scripts/`
-relative to this skill directory.
+**Gate 1 — Post-Analysis:** run `scripts/doc-gates.sh analysis`, in this skill directory.
 **If doc-gates.sh fails (non-zero exit), halt immediately — do not write the documents.**
 
 4. `technical-docs.md` — what a developer needs to use or extend the change. Skip any section
@@ -44,7 +43,7 @@ relative to this skill directory.
 
 An empty file is a valid result. It means the change does not need that document.
 
-**Gate 2 — Post-Generation:** run `doc-gates.sh generation`.
+**Gate 2 — Post-Generation:** run `scripts/doc-gates.sh generation`.
 **If doc-gates.sh fails (non-zero exit), halt immediately — do not integrate.**
 
 6. Integrate: for each topic in `docs-inventory.md` that matches, edit that file. Create a file

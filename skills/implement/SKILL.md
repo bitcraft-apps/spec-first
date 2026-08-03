@@ -39,8 +39,7 @@ Read the current branch. Check whether `.sf/spec.md` exists.
 - Test that it works.
 - Write `.sf/implementation-summary.md`.
 
-**Gate — Post-Implementation:** run `validate-implementation.sh`. The script is at `../../scripts/`
-relative to this skill directory.
+**Gate — Post-Implementation:** run `scripts/validate-implementation.sh`, in this skill directory.
 **If validate-implementation.sh fails (non-zero exit), check every criterion the spec meets, or
 finish the work it names. Do not report the implementation as done.**
 

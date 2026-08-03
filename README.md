@@ -22,6 +22,24 @@ Or run these commands in Claude Code:
 /plugin install sf@spec-first
 ```
 
+### Other agent hosts
+
+Many agent hosts read skills from the shared `.agents/skills` location. Install the skills there from a checkout:
+
+```bash
+git clone https://github.com/bitcraft-apps/spec-first && cd spec-first
+./scripts/install.sh                         # ~/.agents/skills — every project
+./scripts/install.sh --dir .agents/skills    # one project only
+```
+
+Hosts that read this location include pi, opencode, Codex CLI, GitHub Copilot CLI and Gemini CLI. More hosts add support over time. Check the skill documentation of your host for the directories it reads, then pass one with `--dir`.
+
+A checkout installs by symlink. A downloaded release installs by copy. To remove the skills, delete them:
+
+```bash
+rm -rf ~/.agents/skills/{spec,implement,document}
+```
+
 Write your first spec:
 
 ```
