@@ -338,7 +338,7 @@ teardown() {
 
 Hooks read a JSON payload on stdin and write a decision to stdout. To test a hook:
 
-1. **Make a Temporary Directory**: Create `.claude/.sf/` in it during `setup()`
+1. **Make a Temporary Directory**: Create `.sf/` in it during `setup()`
 2. **Write Fixtures**: Add the files the hook reads, for example `spec.md` and `implementation-summary.md`
 3. **Send the Payload**: Point the `cwd` field at the temporary directory
 4. **Separate stderr**: Use `run --separate-stderr` to keep stderr out of `$output`

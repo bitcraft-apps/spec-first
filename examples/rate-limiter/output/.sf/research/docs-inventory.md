@@ -14,7 +14,7 @@
 
 - AGENTS.md — development philosophy
 - CLAUDE.md — references AGENTS.md
-- .claude/.sf/ — auto-generated spec artifacts
+- .sf/ — auto-generated spec artifacts
 
 ## Recommendation
 

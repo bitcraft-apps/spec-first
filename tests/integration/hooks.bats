@@ -14,7 +14,7 @@ export HOOK
 setup() {
     TEST_DIR="$(mktemp -d)"
     export TEST_DIR
-    mkdir -p "$TEST_DIR/.claude/.sf"
+    mkdir -p "$TEST_DIR/.sf"
 }
 
 teardown() {
@@ -29,11 +29,11 @@ run_hook() {
 }
 
 write_spec() {
-    printf '%s\n' "$@" > "$TEST_DIR/.claude/.sf/spec.md"
+    printf '%s\n' "$@" > "$TEST_DIR/.sf/spec.md"
 }
 
 write_impl() {
-    echo "summary" > "$TEST_DIR/.claude/.sf/implementation-summary.md"
+    echo "summary" > "$TEST_DIR/.sf/implementation-summary.md"
 }
 
 # --- Guard: missing files exit early ---

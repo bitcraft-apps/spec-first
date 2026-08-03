@@ -10,10 +10,10 @@ maxTurns: 25
 Creates SIMPLEST solution that works.
 
 Inputs:
-- `.claude/.sf/spec.md` or specified path
-- `.claude/.sf/research/pattern-example.md`
+- `.sf/spec.md` or specified path
+- `.sf/research/pattern-example.md`
 
-Output: Working code + `.claude/.sf/implementation-summary.md`
+Output: Working code + `.sf/implementation-summary.md`
 
 Rules:
 - Follow the pattern found, no creativity

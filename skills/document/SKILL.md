@@ -17,14 +17,14 @@ Creates minimal, proportional documentation. Match doc weight to change weight.
 ---
 
 ## Project Context
-- Implementation summary: !`test -f .claude/.sf/implementation-summary.md && head -20 .claude/.sf/implementation-summary.md || echo "none"`
+- Implementation summary: !`test -f .sf/implementation-summary.md && head -20 .sf/implementation-summary.md || echo "none"`
 
 ## Input Resolution
 
 **Input Resolution:**
 
 1. If $ARGUMENTS provided: Use as artifact/implementation paths
-2. Else if `.claude/.sf/spec.md` and `.claude/.sf/implementation-summary.md` exist: Use them
+2. Else if `.sf/spec.md` and `.sf/implementation-summary.md` exist: Use them
 3. Else: Use **AskUserQuestion** tool to ask for artifact locations
 
 ## Execution

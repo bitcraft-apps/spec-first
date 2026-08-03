@@ -19,8 +19,8 @@ if [ -z "$SF_DIR" ]; then
         [ "$PROJECT_ROOT" = "/" ] && { echo "Error: project root not found. Looked for .git, AGENTS.md or CLAUDE.md in $(pwd) and every parent directory." >&2; exit 1; }
         PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
     done
-    SF_DIR="$PROJECT_ROOT/.claude/.sf"
-    [ -d "$PROJECT_ROOT/.git" ] && [ -f "$PROJECT_ROOT/.gitignore" ] && ! grep -qF '.claude/.sf/' "$PROJECT_ROOT/.gitignore" && echo '.claude/.sf/' >> "$PROJECT_ROOT/.gitignore"
+    SF_DIR="$PROJECT_ROOT/.sf"
+    [ -d "$PROJECT_ROOT/.git" ] && [ -f "$PROJECT_ROOT/.gitignore" ] && ! grep -qF '.sf/' "$PROJECT_ROOT/.gitignore" && echo '.sf/' >> "$PROJECT_ROOT/.gitignore"
 fi
 mkdir -p "$SF_DIR" 2>/dev/null || { echo "Error: Cannot create or write to $SF_DIR" >&2; exit 1; }
 if [ -f "$SF_DIR/mode" ]; then

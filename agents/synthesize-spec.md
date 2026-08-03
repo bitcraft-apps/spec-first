@@ -9,8 +9,8 @@ maxTurns: 12
 
 Combines research into MINIMAL actionable specification.
 
-Inputs: `.claude/.sf/research/*.md` (active research directory)
-Output: `.claude/.sf/spec.md` (active spec file)
+Inputs: `.sf/research/*.md` (active research directory)
+Output: `.sf/spec.md` (active spec file)
 
 Rules:
 - Keep specification under 50 lines if possible

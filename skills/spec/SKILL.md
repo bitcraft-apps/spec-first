@@ -34,18 +34,18 @@ If requirements are vague (< 15 words or unclear), use the **AskUserQuestion** t
 
 ## Directory Management
 
-Claude Code will use `.claude/.sf/` as the working directory.
+Claude Code will use `.sf/` as the working directory.
 
 **Command-level logic:**
 
 ```
-If .claude/.sf/spec.md exists:
+If .sf/spec.md exists:
     Use AskUserQuestion tool: "Existing spec found. What would you like to do?"
       Options: "Update existing" / "Create new"
-    If user chooses update: Write "update" to .claude/.sf/mode
-    If user chooses new: Write "new" to .claude/.sf/mode
+    If user chooses update: Write "update" to .sf/mode
+    If user chooses new: Write "new" to .sf/mode
 Else:
-    Write "first" to .claude/.sf/mode
+    Write "first" to .sf/mode
 ```
 
 ## Execution

@@ -56,7 +56,6 @@ tests/test-results/
 
 # Specification Files
 .sf/
-.claude/.sf/
 
 # Allow committed example output
 !examples/**/output/.sf/

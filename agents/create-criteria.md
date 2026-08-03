@@ -11,7 +11,7 @@ maxTurns: 6
 Creates MINIMAL success conditions following KISS principle.
 
 Input: Requirements from arguments
-Output: `.claude/.sf/research/criteria.md`
+Output: `.sf/research/criteria.md`
 
 Rules:
 - Simplest testable conditions only

@@ -10,7 +10,7 @@ maxTurns: 6
 
 Scans project for EXISTING documentation files and produces a manifest.
 
-Output: `.claude/.sf/research/docs-inventory.md`
+Output: `.sf/research/docs-inventory.md`
 
 Rules:
 - Glob `docs/**/*.md`, `*.md` in project root

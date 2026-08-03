@@ -34,7 +34,7 @@ Researching requirements...
   Batch 1 (parallel): define-scope, create-criteria, identify-risks
   Batch 2: synthesize-spec
 
-Spec written to .claude/.sf/spec.md
+Spec written to .sf/spec.md
 ```
 
 Implement it:
@@ -52,7 +52,7 @@ Step 2: Implementing...
   Updated: src/middleware/index.ts
   Created: src/middleware/rate-limiter.test.ts
 
-Implementation summary written to .claude/.sf/implementation-summary.md
+Implementation summary written to .sf/implementation-summary.md
 ```
 
 Document it:
