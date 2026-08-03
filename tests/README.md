@@ -373,7 +373,7 @@ use `install.sh` to check this path.
 
 | sf version | Path | Host | Host version | Date |
 |------------|------|------|--------------|------|
-|            |      |      |              |      |
+| 1.3.1 | skills directory | pi | 0.83.0 | 2026-08-03 |
 
 ## Troubleshooting
 
