@@ -3,7 +3,6 @@ name: implement
 description: Implement through pattern learning
 disable-model-invocation: true
 argument-hint: "[--isolate] [SPECIFICATION_OR_PATH]"
-allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-implementation.sh:*)
 ---
 
 # Implement Command

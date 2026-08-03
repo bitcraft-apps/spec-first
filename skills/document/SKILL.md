@@ -3,7 +3,6 @@ name: document
 description: Generate minimal documentation through parallel agents
 disable-model-invocation: true
 argument-hint: "[SPECIFICATION_AND_IMPLEMENTATION_PATHS]"
-allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh:*)
 ---
 
 # Document Command

@@ -3,7 +3,6 @@ name: spec
 description: Create specifications through parallel analysis
 disable-model-invocation: true
 argument-hint: "[REQUIREMENTS]"
-allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*), Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-spec.sh:*)
 ---
 
 # Spec Command
