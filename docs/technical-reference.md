@@ -2,11 +2,12 @@
 
 ## Overview
 
-- 3 commands start 13 agent invocations.
+- 3 commands. Each one is a skill that states the steps and the gates for one agent to run in order.
+- On Claude Code, the same 3 commands start 13 agent invocations instead.
 - 7 research agents use the Haiku model.
 - 5 synthesis and implementation agents use the model of the caller.
 - 1 built-in Explore subagent finds patterns.
-- All agents write their output to `.sf/research/`. Git ignores this directory.
+- Every step writes its output to `.sf/research/`. Git ignores this directory.
 
 ## Commands
 
@@ -101,7 +102,12 @@ same checks.
 
 ## Setup
 
-- Claude Code CLI. `Agent` tool support (`subagent_type`) makes the commands run the steps in parallel. Without it, the skills run the same steps in order.
+- A host that reads skills from `.agents/skills`, or from a directory you pass to
+  `scripts/install.sh --dir`. On Claude Code, install the plugin instead.
+- A shell. The skills call the scripts in `scripts/`.
+- Subagents are optional. `Agent` tool support (`subagent_type`) makes the commands run the steps
+  in parallel. Without it, the skills run the same steps in order.
+- Hooks are optional. Only Claude Code loads `hooks/hooks.json`. The skills call the same scripts.
 - Haiku model access for research agents
 - LSP is optional. If LSP is not available, `analyze-implementation` uses Grep and Glob.
 
@@ -141,5 +147,5 @@ bash scripts/validate-plugin.sh
 
 ## Cross-References
 
-- [CLAUDE.md](../CLAUDE.md) — framework philosophy and rules
+- [AGENTS.md](../AGENTS.md) — framework philosophy and rules
 - [CHANGELOG.md](../CHANGELOG.md)
