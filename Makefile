@@ -18,7 +18,7 @@ help:
 	@echo "  test-parallel     Run tests in parallel"
 	@echo ""
 	@echo "  setup             Initialize git submodules and setup"
-	@echo "  install           Install the skills for pi, opencode and Copilot CLI"
+	@echo "  install           Install the skills in the shared .agents/skills location"
 	@echo "  validate          Validate framework configuration"
 	@echo "  clean             Clean up test artifacts"
 	@echo ""
@@ -86,7 +86,7 @@ test-parallel: setup
 	cd tests && ./run-tests.sh --parallel $(if $(FILTER),--filter $(FILTER))
 
 
-# Install skills for hosts that read ~/.agents/skills
+# Install skills for every host that reads ~/.agents/skills
 # Pass options with ARGS, for example: make install ARGS="--dir .agents/skills"
 install:
 	@./scripts/install.sh $(ARGS)

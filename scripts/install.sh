@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installs the sf skills where pi, opencode and GitHub Copilot CLI read them
+# Installs the sf skills in the shared .agents/skills location
 # Usage: install.sh [--copy|--symlink] [--dir DIR] [--force]
 
 set -e
@@ -47,4 +47,4 @@ for source in "$REPO_ROOT"/skills/*/; do
     echo "Installed $name ($MODE) -> $target"
 done
 
-echo "Hosts that read $DIR: pi, opencode, GitHub Copilot CLI."
+echo "Every agent host that reads $DIR now finds these skills."
