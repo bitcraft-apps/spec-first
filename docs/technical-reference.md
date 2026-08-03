@@ -110,6 +110,11 @@ directory is `.sf/` in the project root.
 `specs/<timestamp>/` and replaces `spec.md` and `research/` with symlinks. The script reads
 the directory from its second argument, then `$SF_DIR`, then the project root.
 
+`scripts/doc-gates.sh <analysis|generation> [sf-dir]` checks that a document batch wrote its
+research files. It exits non-zero and prints the reason if a file is missing, or if a generated
+doc contains a placeholder marker. The script reads the directory from its second argument,
+then `$SF_DIR`, then `.sf` in the current directory.
+
 ### .gitignore
 
 ```gitignore
