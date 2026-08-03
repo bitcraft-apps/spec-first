@@ -48,7 +48,7 @@ The [`output/`](output/) directory contains the complete result of running this 
 
 **Pipeline artifacts** ([`output/.sf/`](output/.sf/)):
 - [`spec.md`](output/.sf/spec.md) — specification
-- [`research/`](output/.sf/research/) — scope, criteria, risks, gate results, doc drafts
+- [`research/`](output/.sf/research/) — scope, criteria, risks, doc drafts
 - [`implementation-summary.md`](output/.sf/implementation-summary.md) — what implement produced
 
 Generated on 2026-03-16 by running `/sf:spec` → `/sf:implement` → `/sf:document` sequentially.

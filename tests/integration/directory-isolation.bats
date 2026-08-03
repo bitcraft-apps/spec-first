@@ -26,6 +26,20 @@ export PROJECT_ROOT
     grep -q '"Update existing" / "Create new"' "$skill_file"
 }
 
+@test "document skill delegates its gates to doc-gates.sh" {
+    local skill_file="$PROJECT_ROOT/skills/document/SKILL.md"
+
+    grep -q 'allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh:\*)' "$skill_file"
+    grep -q 'scripts/doc-gates.sh analysis' "$skill_file"
+    grep -q 'scripts/doc-gates.sh generation' "$skill_file"
+    grep -q 'doc-gates.sh fails.*halt' "$skill_file"
+
+    # Gate 3 had no deterministic check, so it is gone
+    ! grep -q 'Gate 3' "$skill_file"
+
+    [ -x "$PROJECT_ROOT/scripts/doc-gates.sh" ]
+}
+
 @test "directory isolation maintains backward compatibility" {
     # Check that synthesize-spec agent mentions symlink awareness
     grep -q "active.*directory\|symlink-aware" "$PROJECT_ROOT/agents/synthesize-spec.md"
