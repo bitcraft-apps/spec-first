@@ -94,6 +94,24 @@ teardown() {
     grep -q "integrate-docs" "$PROJECT_ROOT/skills/document/SKILL.md"
 }
 
+# The body up to "## On Claude Code" must run on a host without subagents.
+# Skips the frontmatter, which is host-specific by nature.
+default_path() {
+    awk 'NR>1 && /^---$/ {body=1; next} /^## On Claude Code/ {exit} body' \
+        "$PROJECT_ROOT/skills/$1/SKILL.md"
+}
+
+@test "default path of every skill is host-neutral" {
+    local pattern
+    pattern="$(basename -a "$PROJECT_ROOT"/agents/*.md | sed 's/\.md$//' | paste -sd'|' -)"
+
+    for skill in spec implement document; do
+        grep -q '^## On Claude Code' "$PROJECT_ROOT/skills/$skill/SKILL.md"
+        ! default_path "$skill" \
+            | grep -qE 'Task:|subagent_type|AskUserQuestion|\$\{CLAUDE_|Explore'"|$pattern"
+    done
+}
+
 @test "spec skill orchestrates agents" {
     # Check that spec skill references agents
     grep -q "define-scope" "$PROJECT_ROOT/skills/spec/SKILL.md"

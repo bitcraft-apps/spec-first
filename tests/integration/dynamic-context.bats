@@ -104,22 +104,22 @@ teardown() {
     [ "${#lines[@]}" -eq 20 ]
 }
 
-# --- Skills contain Project Context sections ---
+# --- Skills keep the injection under the Claude Code section ---
 
 @test "spec skill has Project Context with dynamic injection" {
-    grep -q '## Project Context' "$PROJECT_ROOT/skills/spec/SKILL.md"
+    grep -q '## On Claude Code' "$PROJECT_ROOT/skills/spec/SKILL.md"
     grep -q '!`git branch --show-current 2>/dev/null`' "$PROJECT_ROOT/skills/spec/SKILL.md"
     grep -q '!`git log --oneline -5 2>/dev/null`' "$PROJECT_ROOT/skills/spec/SKILL.md"
     grep -q '!`git status --short 2>/dev/null | head -20`' "$PROJECT_ROOT/skills/spec/SKILL.md"
 }
 
 @test "implement skill has Project Context with dynamic injection" {
-    grep -q '## Project Context' "$PROJECT_ROOT/skills/implement/SKILL.md"
+    grep -q '## On Claude Code' "$PROJECT_ROOT/skills/implement/SKILL.md"
     grep -q '!`git branch --show-current 2>/dev/null`' "$PROJECT_ROOT/skills/implement/SKILL.md"
     grep -q '!`test -f .sf/spec.md && echo "yes" || echo "no"`' "$PROJECT_ROOT/skills/implement/SKILL.md"
 }
 
 @test "document skill has Project Context with dynamic injection" {
-    grep -q '## Project Context' "$PROJECT_ROOT/skills/document/SKILL.md"
+    grep -q '## On Claude Code' "$PROJECT_ROOT/skills/document/SKILL.md"
     grep -q '!`test -f .sf/implementation-summary.md' "$PROJECT_ROOT/skills/document/SKILL.md"
 }

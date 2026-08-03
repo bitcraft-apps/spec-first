@@ -8,24 +8,22 @@ allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:*)
 
 # Spec Command
 
-Creates specifications with intelligent clarification.
+Creates a specification from requirements. One agent does the steps in order.
 
 ## Usage
 ```
 /sf:spec [REQUIREMENTS]
 ```
 
----
+## Context
 
-## Project Context
-- Branch: !`git branch --show-current 2>/dev/null`
-- Recent commits: !`git log --oneline -5 2>/dev/null`
-- Working tree: !`git status --short 2>/dev/null | head -20`
-- Existing spec: !`test -f .sf/spec.md && echo "yes" || echo "no"`
+Read the current branch, the last 5 commits, and the working tree.
+Check whether `.sf/spec.md` exists.
 
 ## Clarification Check
 
-If requirements are vague (< 15 words or unclear), use the **AskUserQuestion** tool to gather missing context. Do NOT output questions as plain text — always use the tool so execution pauses for the user's answer.
+If the requirements are vague (fewer than 15 words, or unclear), ask the user before you start.
+Wait for the answer. Do not assume.
 
 **Questions to consider asking:**
 - What specific problem are you solving?
@@ -36,43 +34,41 @@ If requirements are vague (< 15 words or unclear), use the **AskUserQuestion** t
 
 ## Directory Management
 
-Claude Code will use `.sf/` as the working directory.
+The working directory is `.sf/`. `$SF_DIR` overrides it.
 
-**Command-level logic:**
+Pick the mode:
+- No `.sf/spec.md` → `first`
+- `.sf/spec.md` exists → ask the user: "Update existing" / "Create new" → `update` / `new`
 
-```
-If Existing spec is "yes":
-    Use AskUserQuestion tool: "Existing spec found. What would you like to do?"
-      Options: "Update existing" / "Create new"
-    "Update existing" → MODE=update
-    "Create new" → MODE=new
-Else:
-    MODE=first
-```
+Run `spec-dir.sh <first|update|new>`, at `../../scripts/` relative to this skill directory.
+The script finds the project root itself.
+**If spec-dir.sh fails (non-zero exit), halt immediately — do not do the work below.**
 
 ## Execution
 
-After directory setup and clarification (if needed), run agents:
+Write each file in turn. The requirements are the input to this skill.
 
-**Pre-execution:**
-- Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
-  The script finds the project root itself if `CLAUDE_PROJECT_DIR` is not set.
-- **If spec-dir.sh fails (non-zero exit), halt immediately — do not run downstream agents.**
-
-**Batch 1 (Parallel):**
-- Task: define-scope with requirements: $ARGUMENTS
-- Task: create-criteria with requirements: $ARGUMENTS
-- Task: identify-risks with requirements: $ARGUMENTS
-
-**Batch 2:**
-- Task: synthesize-spec to combine all research, following the structure in `${CLAUDE_SKILL_DIR}/spec-template.md`
+1. `.sf/research/scope.md` — the narrowest viable change. Exclude what is not needed now.
+2. `.sf/research/criteria.md` — the simplest testable pass/fail conditions.
+3. `.sf/research/risks.md` — blockers only, not every possible risk.
+4. `$SF_DIR/spec.md` — merge the three files. Keep it under 50 lines. Use the structure in
+   `spec-template.md`, next to this file.
 
 Output: `$SF_DIR/spec.md` (direct file or symlink to timestamped spec)
 
-## Error Recovery
+Say: "Spec written to `{output path}`. Run `/sf:implement` to build it."
 
-If any agent fails:
-1. Claude Code shows the specific error
-2. Fix the issue (usually unclear requirements)
-3. Re-run /sf:spec with clearer input
-4. No partial state - each run starts fresh
+## On Claude Code
+
+Claude Code has subagents. Use them to run steps 1 to 3 at the same time.
+
+Context arrives for free:
+- Branch: !`git branch --show-current 2>/dev/null`
+- Recent commits: !`git log --oneline -5 2>/dev/null`
+- Working tree: !`git status --short 2>/dev/null | head -20`
+- Existing spec: !`test -f .sf/spec.md && echo "yes" || echo "no"`
+
+- Use the **AskUserQuestion** tool for both questions above, so execution pauses for the answer.
+- Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
+- Batch 1 (Parallel): define-scope, create-criteria, identify-risks — each with requirements: $ARGUMENTS
+- Batch 2: synthesize-spec, following `${CLAUDE_SKILL_DIR}/spec-template.md`
