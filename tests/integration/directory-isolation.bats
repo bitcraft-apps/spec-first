@@ -17,9 +17,9 @@ export PROJECT_ROOT
 @test "spec skill includes directory management step" {
     local skill_file="$PROJECT_ROOT/skills/spec/SKILL.md"
 
-    # Check spec skill calls the script and allows the Bash command
+    # Check spec skill calls the script. No allowed-tools: the field is Claude-only.
     grep -q 'scripts/spec-dir.sh \$MODE' "$skill_file"
-    grep -q 'allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh:\*)' "$skill_file"
+    ! grep -q 'allowed-tools' "$skill_file"
 
     # Check it explains directory management workflow
     grep -q "Directory Management" "$skill_file"
@@ -29,7 +29,7 @@ export PROJECT_ROOT
 @test "document skill delegates its gates to doc-gates.sh" {
     local skill_file="$PROJECT_ROOT/skills/document/SKILL.md"
 
-    grep -q 'allowed-tools: Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh:\*)' "$skill_file"
+    ! grep -q 'allowed-tools' "$skill_file"
     grep -q 'scripts/doc-gates.sh analysis' "$skill_file"
     grep -q 'scripts/doc-gates.sh generation' "$skill_file"
     grep -q 'doc-gates.sh fails.*halt' "$skill_file"

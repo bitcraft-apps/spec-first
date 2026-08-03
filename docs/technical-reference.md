@@ -98,7 +98,8 @@ Hook commands use `${CLAUDE_PLUGIN_ROOT}` as a path prefix. At run time, Claude 
 The `Stop` event runs two hooks: validate-spec and validate-implementation. Each hook is an
 adapter. It reads the hook JSON, calls the matching script in `scripts/`, and reports a non-zero
 exit as a `block` decision. The skills call the same scripts, so hosts without hooks get the
-same checks.
+same checks. The skills do not pre-approve these scripts, so the host asks for permission the
+first time each one runs.
 
 ## Setup
 
