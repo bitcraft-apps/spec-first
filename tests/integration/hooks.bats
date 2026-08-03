@@ -22,8 +22,7 @@ teardown() {
 }
 
 # Runs the hook with a payload that points at TEST_DIR.
-# Keeps stderr out of $output. Line 17 of the hook prints a shell error
-# when the spec has no unchecked criteria. That refactor is out of scope.
+# Keeps stderr out of $output so that tests can assert on each stream.
 run_hook() {
     local active="${1:-false}"
     run --separate-stderr bash "$HOOK" <<< "{\"cwd\":\"$TEST_DIR\",\"stop_hook_active\":$active}"
@@ -84,6 +83,36 @@ write_impl() {
     run_hook
     [ "$status" -eq 0 ]
     [ -z "$output" ]
+}
+
+@test "checked criterion that quotes an unchecked marker produces no decision" {
+    write_spec '- [x] Spec has one `- [ ]` criterion -> exit 0.'
+    write_impl
+    run_hook
+    [ "$status" -eq 0 ]
+    [ -z "$output" ]
+}
+
+@test "counts only the unchecked criteria in a mixed spec" {
+    write_spec \
+        "- [x] first done" \
+        '- [x] second done, and it mentions `- [ ]` in its text' \
+        "- [ ] third not done" \
+        "- [ ] fourth not done"
+    write_impl
+    run_hook
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"2 acceptance criteria unchecked"* ]]
+}
+
+# --- stderr ---
+
+@test "all criteria checked writes nothing to stderr" {
+    write_spec "- [x] done"
+    write_impl
+    run_hook
+    [ "$status" -eq 0 ]
+    [ -z "$stderr" ]
 }
 
 # --- Re-entry guard ---

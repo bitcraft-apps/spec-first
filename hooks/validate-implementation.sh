@@ -13,7 +13,7 @@ if [ ! -f "$SPEC_FILE" ] || [ ! -f "$IMPL_FILE" ]; then exit 0; fi
 CRITERIA=$(grep -i "^\- \[" "$SPEC_FILE" 2>/dev/null)
 [ -z "$CRITERIA" ] && exit 0
 
-UNCHECKED=$(echo "$CRITERIA" | grep -c "\[ \]" || echo "0")
+UNCHECKED=$(echo "$CRITERIA" | grep -c "^\- \[ \]")
 if [ "$UNCHECKED" -gt 0 ]; then
   echo "{\"decision\":\"block\",\"reason\":\"$UNCHECKED acceptance criteria unchecked in spec\"}"
 fi
