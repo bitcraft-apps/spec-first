@@ -5,9 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 # Cancel in-progress runs when a new run is triggered
 concurrency:
@@ -20,7 +18,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run release-please
-        uses: googleapis/release-please-action@v4
+      # Mint a short-lived installation token from the bitcraft-release GitHub App.
+      # The token has no expiry to rotate. Events that the App authors also start
+      # workflows, so CI runs on the release PR. GITHUB_TOKEN cannot do this,
+      # because GitHub suppresses runs for events from a workflow own token.
+      - name: Mint App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          client-id: ${{ secrets.RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+
+      # Third-party actions are SHA-pinned. A tag can move to different code.
+      - name: Run release-please
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
