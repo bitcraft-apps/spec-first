@@ -1,6 +1,6 @@
-# Example: Rate Limiter
+# Example: Debounced Search Input
 
-Build a token-bucket rate limiter using the spec-first workflow.
+Build a React component with the spec-first workflow.
 
 ## 1. Write the spec
 
@@ -10,8 +10,8 @@ Build a token-bucket rate limiter using the spec-first workflow.
 
 Describe what you need:
 
-> Token-bucket rate limiter. 100 requests per minute per API key.
-> Returns 429 when exceeded. Configurable burst allowance.
+> Debounced search input component for React. Call onSearch 300 ms after typing stops.
+> Show a clear button. Keep the field controlled by the parent.
 
 Review the generated spec, then proceed to implementation.
 
@@ -22,7 +22,7 @@ Review the generated spec, then proceed to implementation.
 ```
 
 Generates working code from the spec, following existing patterns in your codebase.
-This project held only `package.json`, so the code follows the TypeScript and vitest defaults.
+This project held only `package.json`, so the code follows the React and vitest defaults.
 
 ## 3. Document
 
@@ -42,9 +42,9 @@ The workflow is sequential: **spec > implement > document**.
 The [`output/`](output/) directory contains the complete result of running this workflow end-to-end:
 
 **Deliverables:**
-- [`rate-limiter.ts`](output/rate-limiter.ts) — token-bucket implementation
-- [`rate-limiter.test.ts`](output/rate-limiter.test.ts) — 11 tests, run with `npm test`
-- [`rate-limiter-middleware.ts`](output/rate-limiter-middleware.ts) — HTTP middleware
+- [`SearchInput.tsx`](output/SearchInput.tsx) — the controlled component
+- [`SearchInput.test.tsx`](output/SearchInput.test.tsx) — 9 tests, run with `npm test`
+- [`vitest.config.ts`](output/vitest.config.ts) — vitest with the `jsdom` environment
 - [`docs.md`](output/docs.md) — user-facing documentation
 
 **Pipeline artifacts** ([`output/.sf/`](output/.sf/)):

@@ -149,7 +149,7 @@ that users cannot see gets no user documentation.
 
 ## Next steps
 
-- [Rate limiter example](../examples/rate-limiter/) — a spec, an implementation and docs from one
-  complete run.
+- [Examples](../examples/) — a backend service, a command line tool and a React component,
+  each from one complete run.
 - [Technical Reference](technical-reference.md) — `$SF_DIR`, the scripts and the schemas.
 - [Supported hosts](supported-hosts.md) — the skills directory each host reads.
