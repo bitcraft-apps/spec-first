@@ -28,7 +28,17 @@ New to Spec First? [Getting Started](docs/getting-started.md) walks through your
 
 ## How it works
 
-Each command gives the same steps and the same checks to every host. One agent does the steps in order. On Claude Code, `/sf:spec` and `/sf:document` run the same steps as workflow scripts, which do the independent work in parallel. The spec controls the implement step. The agent does not write code without a spec.
+Each command gives the same steps and the same checks to every host.
+
+- **You approve the requirements first.** `/sf:spec` writes `.sf/spec.md`. You read that file and
+  correct it before the agent writes code.
+- **The implement step copies a pattern from your repo.** It finds the closest existing example
+  and follows it. It does not invent a structure.
+- **The checks are gates.** A script fails when the spec misses a section, or when an acceptance
+  criterion stays unchecked. On Claude Code a hook blocks the turn. On another host the skill
+  stops the agent from reporting the work as done.
+- **Claude Code does the independent work in parallel.** `/sf:spec` and `/sf:document` run as
+  workflow scripts. Every other host does the same steps in order.
 
 ## Token Usage
 
