@@ -82,7 +82,7 @@ write_analysis_files() {
 }
 
 @test "generation blocks every placeholder marker" {
-    for marker in TODO TBD PLACEHOLDER "[INSERT name]" todo; do
+    for marker in "TODO: fill in" "TBD: decide" "[INSERT name]" "[TODO]" "<PLACEHOLDER>" "todo: lowercase"; do
         echo "$marker" > "$TEST_DIR/.sf/research/technical-docs.md"
         touch "$TEST_DIR/.sf/research/user-docs.md"
 
@@ -90,6 +90,26 @@ write_analysis_files() {
         [ "$status" -eq 1 ]
         assert_output_contains "FAIL technical-docs.md: contains a placeholder marker"
     done
+}
+
+@test "generation passes a props table with a placeholder row" {
+    printf '| Prop | Type | Description |\n| placeholder | string | Hint text shown when empty |\n' \
+        > "$TEST_DIR/.sf/research/technical-docs.md"
+    echo "Set the placeholder to guide the user." > "$TEST_DIR/.sf/research/user-docs.md"
+
+    run run_doc_gates "$TEST_DIR" generation "$TEST_DIR/.sf"
+    [ "$status" -eq 0 ]
+    assert_output_contains "PASS technical-docs.md"
+    assert_output_contains "PASS user-docs.md"
+}
+
+@test "generation passes a marker inside a code span" {
+    echo 'Mark unfinished sections with a `TODO:` comment.' > "$TEST_DIR/.sf/research/technical-docs.md"
+    touch "$TEST_DIR/.sf/research/user-docs.md"
+
+    run run_doc_gates "$TEST_DIR" generation "$TEST_DIR/.sf"
+    [ "$status" -eq 0 ]
+    assert_output_contains "PASS technical-docs.md"
 }
 
 @test "an empty file passes" {

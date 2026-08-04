@@ -130,10 +130,11 @@ if (!technical || !user) {
   return { error: 'Drafting incomplete. Rerun /sf:document.' }
 }
 
-// Gate: a draft with a placeholder marker is not finished work.
-const MARKER = /TODO|TBD|PLACEHOLDER|\[INSERT/i
+// Gate: a draft with a placeholder marker is not finished work. A marker shape, not a bare
+// word - "placeholder" in a props table is prose, and a code span quotes a marker.
+const MARKER = /(TODO|TBD)\s*:|[[<](TODO|TBD|PLACEHOLDER|INSERT)/i
 const marked = [['technical', technical], ['user', user]]
-  .filter(([, draft]) => MARKER.test(draft.markdown))
+  .filter(([, draft]) => MARKER.test(draft.markdown.replace(/`[^`]*`/g, '')))
   .map(([name]) => name)
 
 if (marked.length > 0) {
