@@ -264,12 +264,12 @@ for skill in "${REQUIRED_SKILLS[@]}"; do
             print_warning "$skill doesn't use \$ARGUMENTS (may be intentional)"
         fi
 
-        # Check for agent delegation
-        AGENT_MENTIONS=$(grep -c "$AGENT_PATTERN" "$SKILL_FILE" || true)
-        if [ "$AGENT_MENTIONS" -gt 0 ]; then
-            print_status "$skill delegates to agents ($AGENT_MENTIONS mentions)" 0
+        # Check for delegation, to a registered agent or to a workflow
+        DELEGATIONS=$(grep -cE "$AGENT_PATTERN|name: \"sf-" "$SKILL_FILE" || true)
+        if [ "$DELEGATIONS" -gt 0 ]; then
+            print_status "$skill delegates to an agent or a workflow ($DELEGATIONS mentions)" 0
         else
-            print_warning "$skill doesn't delegate to agents"
+            print_warning "$skill delegates to nothing"
         fi
 
     else

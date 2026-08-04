@@ -41,17 +41,14 @@ export PROJECT_ROOT
 }
 
 @test "directory isolation maintains backward compatibility" {
-    # Check that synthesize-spec agent mentions symlink awareness
-    grep -q "active.*directory\|symlink-aware" "$PROJECT_ROOT/agents/synthesize-spec.md"
-
     # Check output paths are documented correctly (now uses $SF_DIR variable)
     grep -q "SF_DIR/spec\.md.*direct file or symlink" "$PROJECT_ROOT/skills/spec/SKILL.md"
 }
 
-@test "framework validation counts the agents without the directory agent" {
-    # Run framework validation and check it counts the correct number of agents (11 total)
+@test "framework validation counts the one registered agent" {
+    # The workflow scripts hold the other prompts, so they need no registration
     cd "$PROJECT_ROOT"
-    ./scripts/validate-plugin.sh 2>&1 | grep -q "Found 11 agent files"
+    ./scripts/validate-plugin.sh 2>&1 | grep -q "Found 1 agent files"
 
     # The directory work is a script now, not an agent
     [ ! -f "$PROJECT_ROOT/agents/manage-spec-directory.md" ]
