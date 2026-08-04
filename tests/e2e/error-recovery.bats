@@ -177,42 +177,34 @@ teardown() {
     setup_mock_repo "$MOCK_REPO"
     cd "$MOCK_REPO"
 
-    local pids=()
+    local all_consistent=true
 
-    # Start multiple background processes running validation
+    # Expected output, from a run with no other run in progress
+    ./scripts/validate-plugin.sh > "$TEST_DIR/reference.txt" 2>&1
+
+    # Start multiple background processes running validation. The script only reads
+    # files and takes about half a second, so the runs overlap without a barrier.
+    local pids=()
     for i in {1..5}; do
-        (
-            sleep 0.1
-            ./scripts/validate-plugin.sh > "$TEST_DIR/result_$i.txt" 2>&1
-            echo $? > "$TEST_DIR/status_$i.txt"
-        ) &
+        ./scripts/validate-plugin.sh > "$TEST_DIR/result_$i.txt" 2>&1 &
         pids+=($!)
     done
 
-    # Wait for all processes to complete
-    for pid in "${pids[@]}"; do
-        wait "$pid"
-    done
-
-    # Check that all processes succeeded and got consistent results
-    local first_result
-    local all_consistent=true
-
+    # Take the exit code of every process from wait
     for i in {1..5}; do
-        local status=$(cat "$TEST_DIR/status_$i.txt")
-        local result=$(cat "$TEST_DIR/result_$i.txt")
-
-        [ "$status" -eq 0 ] || {
-            test_error "Process $i failed with status $status"
+        wait "${pids[$((i - 1))]}" || {
+            test_error "Process $i failed with status $?"
             all_consistent=false
         }
+    done
 
-        if [ -z "$first_result" ]; then
-            first_result="$result"
-        elif [ "$result" != "$first_result" ]; then
-            test_error "Inconsistent results: '$result' != '$first_result'"
+    # Every process must give the same output as the reference run
+    for i in {1..5}; do
+        diff -q "$TEST_DIR/reference.txt" "$TEST_DIR/result_$i.txt" >/dev/null || {
+            test_error "Process $i output differs from the reference run"
+            diff "$TEST_DIR/reference.txt" "$TEST_DIR/result_$i.txt" >&2
             all_consistent=false
-        fi
+        }
     done
 
     [ "$all_consistent" = true ]
