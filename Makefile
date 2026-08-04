@@ -42,10 +42,6 @@ help:
 setup:
 	@echo "🔧 Setting up Spec First..."
 	git submodule update --init --recursive
-	chmod +x tests/run-tests.sh
-	chmod +x tests/bats-core/bin/bats
-	chmod +x scripts/*.sh
-	chmod +x scripts/validate-plugin.sh
 	@echo "✅ Setup complete!"
 
 # Run all tests
@@ -94,7 +90,7 @@ test-parallel: setup
 install:
 	@./scripts/install.sh $(ARGS)
 
-# Lint every shell script outside the bats-core submodule
+# Lint every shell script outside the bats-core submodule, and check committed modes
 lint:
 	@if ! command -v shellcheck >/dev/null 2>&1; then \
 		echo "❌ shellcheck not installed. Install with: brew install shellcheck"; \
@@ -106,6 +102,8 @@ lint:
 		-not -path './node_modules/*' \
 		-not -path './tests/bats-core/*' \
 		| xargs shellcheck -x
+	@echo "🔍 Checking script permissions..."
+	@./scripts/check-script-permissions.sh
 	@echo "✅ Lint complete!"
 
 # Fast local mirror of CI: lint, version sync, plugin validation, unit tests

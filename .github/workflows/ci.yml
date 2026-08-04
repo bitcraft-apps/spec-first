@@ -69,11 +69,6 @@ jobs:
           # Ensure submodules are properly initialized
           git submodule update --init --recursive
 
-          # Make scripts executable
-          chmod +x tests/run-tests.sh
-          chmod +x tests/bats-core/bin/bats
-          chmod +x scripts/*.sh
-
       - name: Run ${{ matrix.test-type }} tests
         id: test-execution
         run: |
@@ -116,14 +111,17 @@ jobs:
       - name: Validate version consistency
         run: |
           echo "Validating version references are in sync..."
-          chmod +x scripts/check-version-sync.sh
           ./scripts/check-version-sync.sh
 
       - name: Validate workflow scripts load
         run: |
           echo "Validating workflows/*.js load..."
-          chmod +x scripts/check-workflow-scripts.sh
           ./scripts/check-workflow-scripts.sh
+
+      - name: Validate script permissions
+        run: |
+          echo "Validating tracked shell scripts are executable..."
+          ./scripts/check-script-permissions.sh
 
       - name: Validate hooks.json
         run: |

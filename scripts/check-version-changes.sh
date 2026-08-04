@@ -228,9 +228,7 @@ validate_semantic_version() {
         output_error "Version utilities script not found: $version_script"
         return 1
     fi
-    
-    chmod +x "$version_script"
-    
+
     # Validate both versions are semantic
     if ! "$version_script" validate "$base_version" 2>/dev/null; then
         output_error "Invalid base version format: $base_version"
