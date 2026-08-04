@@ -59,7 +59,8 @@ Say: "Spec written to `{output path}`. Run `/sf:implement` to build it."
 
 ## On Claude Code
 
-Claude Code has subagents. Use them to run steps 1 to 3 at the same time.
+Claude Code runs steps 1 to 3 as the `sf-spec` workflow — in parallel, schema-checked, and
+without the research files.
 
 Context arrives for free:
 - Branch: !`git branch --show-current 2>/dev/null`
@@ -69,6 +70,6 @@ Context arrives for free:
 
 - Use the **AskUserQuestion** tool for both questions above, so execution pauses for the answer.
 - Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
-- Batch 1 (Parallel): define-scope, create-criteria, identify-risks — each with requirements: $ARGUMENTS
-- Batch 2: synthesize-spec, following `${CLAUDE_SKILL_DIR}/spec-template.md`
+- Workflow tool, `name: "sf-spec"`. Pass `args` as a JSON object, never as a string:
+  `{"requirements": "$ARGUMENTS", "specPath": "<the spec.md path above>", "templatePath": "${CLAUDE_SKILL_DIR}/spec-template.md"}`
 - Gate: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-spec.sh ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`

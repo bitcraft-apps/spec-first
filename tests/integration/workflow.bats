@@ -112,14 +112,6 @@ default_path() {
     done
 }
 
-@test "spec skill orchestrates agents" {
-    # Check that spec skill references agents
-    grep -q "define-scope" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "create-criteria" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "identify-risks" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "synthesize-spec" "$PROJECT_ROOT/skills/spec/SKILL.md"
-}
-
 @test "agents are properly configured for safe research" {
     # Verify agents have minimal tool sets
     grep -q "tools: Write" "$PROJECT_ROOT/agents/define-scope.md"
@@ -136,14 +128,15 @@ default_path() {
     grep -q -i "spec" "$PROJECT_ROOT/agents/implement-minimal.md"
 }
 
-@test "specification agents execute in parallel" {
-    # Verify spec skill uses parallel execution
-    grep -q "Batch 1.*Parallel" "$PROJECT_ROOT/skills/spec/SKILL.md"
+@test "specification research runs in parallel" {
+    # The spec skill hands the work to the workflow
+    grep -q 'name: "sf-spec"' "$PROJECT_ROOT/skills/spec/SKILL.md"
 
-    # Verify agents are listed
-    grep -q "define-scope" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "create-criteria" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "identify-risks" "$PROJECT_ROOT/skills/spec/SKILL.md"
+    # The workflow fans out the three research agents with parallel()
+    grep -q "await parallel(" "$PROJECT_ROOT/workflows/spec.js"
+    grep -q "label: 'scope'" "$PROJECT_ROOT/workflows/spec.js"
+    grep -q "label: 'criteria'" "$PROJECT_ROOT/workflows/spec.js"
+    grep -q "label: 'risks'" "$PROJECT_ROOT/workflows/spec.js"
 }
 
 @test "agents follow minimalist principles" {

@@ -56,17 +56,14 @@ teardown() {
     grep -q "tools: Write" "$PROJECT_ROOT/agents/define-scope.md"
 }
 
-@test "spec skill delegates to agents properly" {
+@test "spec skill delegates to the sf-spec workflow" {
     [ -f "$PROJECT_ROOT/skills/spec/SKILL.md" ]
 
     # Check YAML frontmatter
     grep -q "description:" "$PROJECT_ROOT/skills/spec/SKILL.md"
 
-    # Check delegation to agents
-    grep -q "define-scope" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "create-criteria" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "identify-risks" "$PROJECT_ROOT/skills/spec/SKILL.md"
-    grep -q "synthesize-spec" "$PROJECT_ROOT/skills/spec/SKILL.md"
+    # Check delegation to the workflow
+    grep -q 'name: "sf-spec"' "$PROJECT_ROOT/skills/spec/SKILL.md"
     grep -q '\$ARGUMENTS' "$PROJECT_ROOT/skills/spec/SKILL.md"
 }
 
