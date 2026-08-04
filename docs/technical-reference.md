@@ -7,7 +7,8 @@
 - 7 research agents use the Haiku model.
 - 5 synthesis and implementation agents use the model of the caller.
 - 1 built-in Explore subagent finds patterns.
-- Every step writes its output to `.sf/research/`. Git ignores this directory.
+- Steps that write research output write it to `.sf/research/`. Git ignores this directory. The
+  `sf-spec` workflow passes results in memory instead.
 
 ## Commands
 
@@ -15,13 +16,38 @@ The `skills/` directory defines the commands. Each `SKILL.md` gives the steps an
 
 The steps below are the Claude Code path.
 
-- `/sf:spec [REQUIREMENTS]` runs the research agents in parallel. Then it synthesizes `spec.md`.
+- `/sf:spec [REQUIREMENTS]` runs the `sf-spec` workflow. The workflow researches scope, criteria and risks in parallel, then writes `spec.md`.
 - `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
 - `/sf:document [PATHS]` runs the analysis agents in parallel. Then it generates the documents in parallel. Then it integrates the documents into `docs/`.
 
 ## Agents
 
 Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). Read the agent files for the details.
+
+## Workflows
+
+Workflow scripts live in `workflows/`. Claude Code loads them from that directory, so the
+manifest does not list them. Each file must end in `.js`, and `export const meta = {...}` must
+be its first statement. A script has no filesystem access: every file write happens inside an
+agent, and the skill runs the gate scripts after the workflow returns.
+
+The **Workflow** tool finds a script by its `meta.name`, without a plugin prefix. Names carry
+the `sf-` prefix for that reason.
+
+### sf-spec
+
+`workflows/spec.js`. Arguments:
+
+```json
+{
+  "requirements": "string — what to specify",
+  "specPath": "string — where to write spec.md",
+  "templatePath": "string — the spec-template.md to follow"
+}
+```
+
+Returns `{ specPath, criteria, risks }`, where the last two are counts. The three research
+agents return validated objects, so this path writes no files under `research/`.
 
 ## Integration Contracts
 

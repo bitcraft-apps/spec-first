@@ -88,6 +88,22 @@ assert 'version' in data, 'missing version'
     done
 }
 
+@test "every workflow script loads" {
+    for wf in "$PROJECT_ROOT/workflows/"*.js; do
+        [ -f "$wf" ] || continue
+
+        # The loader skips any file that is not .js, and the parser needs meta first.
+        head -1 "$wf" | grep -q '^export const meta = {$' || {
+            echo "$(basename "$wf") must start with 'export const meta = {'" >&2
+            return 1
+        }
+        node --check "$wf" || {
+            echo "$(basename "$wf") is not parseable JavaScript" >&2
+            return 1
+        }
+    done
+}
+
 @test "hooks.json is valid JSON with expected structure" {
     run cat "$PROJECT_ROOT/hooks/hooks.json"
     [ "$status" -eq 0 ]
