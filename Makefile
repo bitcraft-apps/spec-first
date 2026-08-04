@@ -131,7 +131,6 @@ dev-watch:
 docs:
 	@echo "📚 Framework documentation available in:"
 	@echo "  - README.md (project overview)"
-	@echo "  - CLAUDE.md (development guide)"
 	@echo "  - AGENTS.md (development guide)"
 	@echo "  - tests/ (test examples and setup)"
 

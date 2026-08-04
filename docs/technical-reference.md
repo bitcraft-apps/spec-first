@@ -31,22 +31,30 @@ In `/sf:implement`, Explore (Step 1) writes `.sf/research/pattern-example.md`. T
 
 ### plugin.json
 
-`.claude-plugin/plugin.json` declares the components of the framework: agents, skills, and hooks. `validate-plugin.sh` reads this file to find the component files. This removes the need for separate lists.
+`.claude-plugin/plugin.json` is the plugin manifest. It holds the name, the version and the
+metadata. It does not list components.
 
 Schema:
 
 ```json
 {
+  "$schema": "string — https://anthropic.com/claude-code/plugin.schema.json",
   "name": "string",
   "version": "string (must match VERSION)",
   "description": "string",
-  "hooks": "string — relative path to hooks.json"
+  "author": { "name": "string", "url": "string" },
+  "repository": "string",
+  "homepage": "string",
+  "license": "string",
+  "keywords": ["string"]
 }
 ```
 
-Claude Code finds the agents and the skills in their default directories: `agents/` and `skills/`. The manifest does not list them.
+Claude Code finds every component in its default directory: `agents/`, `skills/` and
+`hooks/hooks.json`. `validate-plugin.sh` finds them the same way.
 
-**Default behavior:** `validate-plugin.sh` uses hardcoded arrays in three conditions. The manifest is missing. The manifest holds invalid JSON. Or `jq` is not installed.
+`claude plugin validate --strict .claude-plugin/plugin.json` checks the manifest. CI runs it,
+so an unrecognized field or missing metadata fails the build instead of the install.
 
 **Version drift:** `validate-plugin.sh` compares the `plugin.json` version to `VERSION`. If the two versions differ, the validation fails. This check runs only in repository mode.
 
@@ -59,6 +67,7 @@ Schema:
 ```json
 {
   "name": "string (marketplace identifier)",
+  "description": "string — what the marketplace offers",
   "owner": { "name": "string" },
   "plugins": [{
     "name": "string (plugin identifier)",

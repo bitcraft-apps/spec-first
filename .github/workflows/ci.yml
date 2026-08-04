@@ -6,6 +6,7 @@ on:
     paths:
       - "agents/**"
       - "skills/**"
+      - "workflows/**"
       - "hooks/**"
       - "scripts/**"
       - "tests/**"
@@ -17,6 +18,7 @@ on:
     paths:
       - "agents/**"
       - "skills/**"
+      - "workflows/**"
       - "hooks/**"
       - "scripts/**"
       - "tests/**"
@@ -131,6 +133,16 @@ jobs:
             count=$((count + 1))
           done
           echo "PASS: $count skill files found"
+
+      - name: Install Claude Code CLI
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Validate manifests with claude plugin validate --strict
+        run: |
+          claude plugin validate --strict .claude-plugin/plugin.json
+          claude plugin validate --strict .
 
       - name: Validate agent files exist
         run: |

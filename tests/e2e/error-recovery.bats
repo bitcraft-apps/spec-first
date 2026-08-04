@@ -35,7 +35,6 @@ setup_mock_repo() {
 
     # Copy docs needed for validation
     [ -f "$PROJECT_ROOT/AGENTS.md" ] && cp "$PROJECT_ROOT/AGENTS.md" "$repo_dir/"
-    [ -f "$PROJECT_ROOT/CLAUDE.md" ] && cp "$PROJECT_ROOT/CLAUDE.md" "$repo_dir/"
     [ -f "$PROJECT_ROOT/README.md" ] && cp "$PROJECT_ROOT/README.md" "$repo_dir/"
     # Skip .claude-plugin/ — tests manipulate VERSION, so copying plugin.json/marketplace.json
     # would cause version mismatch failures. Version-match checks are conditional on file existence.

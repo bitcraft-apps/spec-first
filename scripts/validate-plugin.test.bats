@@ -56,7 +56,6 @@ Spec First — minimalist development workflow.
 ## Principles
 EOF
 
-    echo "@AGENTS.md" > "$FIXTURE_DIR/CLAUDE.md"
     printf "# README\n\n## Quick Start\n\n## Command Reference\n" > "$FIXTURE_DIR/README.md"
 }
 
