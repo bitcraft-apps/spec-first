@@ -87,11 +87,12 @@ teardown() {
 
     # Phase 3: Documentation
     [ -f "$PROJECT_ROOT/skills/document/SKILL.md" ]
-    grep -q "analyze-artifacts" "$PROJECT_ROOT/skills/document/SKILL.md"
-    grep -q "analyze-implementation" "$PROJECT_ROOT/skills/document/SKILL.md"
-    grep -q "create-technical-docs" "$PROJECT_ROOT/skills/document/SKILL.md"
-    grep -q "create-user-docs" "$PROJECT_ROOT/skills/document/SKILL.md"
-    grep -q "integrate-docs" "$PROJECT_ROOT/skills/document/SKILL.md"
+    grep -q 'name: "sf-document"' "$PROJECT_ROOT/skills/document/SKILL.md"
+    grep -q "label: 'artifacts'" "$PROJECT_ROOT/workflows/document.js"
+    grep -q "label: 'implementation'" "$PROJECT_ROOT/workflows/document.js"
+    grep -q "label: 'technical-docs'" "$PROJECT_ROOT/workflows/document.js"
+    grep -q "label: 'user-docs'" "$PROJECT_ROOT/workflows/document.js"
+    grep -q "label: 'integrate-docs'" "$PROJECT_ROOT/workflows/document.js"
 }
 
 # The body up to "## On Claude Code" must run on a host without subagents.

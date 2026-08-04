@@ -55,12 +55,11 @@ On a non-zero gate exit: halt, report which gate failed and the reason it printe
 
 ## On Claude Code
 
-Claude Code has subagents. Use them to run the steps in three batches.
+Claude Code runs the steps as the `sf-document` workflow — schema-checked, and with no shared
+file between the analysis agents. The workflow applies both gates itself.
 
 - Implementation summary: !`test -f .sf/implementation-summary.md && head -20 .sf/implementation-summary.md || echo "none"`
 - Use the **AskUserQuestion** tool to ask for the artifact locations.
-- Batch 1 (Parallel): analyze-artifacts, analyze-implementation, analyze-existing-docs
-- Gate 1: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh analysis ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
-- Batch 2 (Parallel): create-technical-docs, create-user-docs
-- Gate 2: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh generation ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
-- Batch 3: integrate-docs
+- Workflow tool, `name: "sf-document"`. Pass `args` as a JSON object, never as a string:
+  `{"specPath": "<the artifact path>", "implementationPath": "<the implementation summary path>"}`
+- Report the files the workflow says it changed. An empty list means the change needs no docs.

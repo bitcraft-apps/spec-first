@@ -18,7 +18,7 @@ The steps below are the Claude Code path.
 
 - `/sf:spec [REQUIREMENTS]` runs the `sf-spec` workflow. The workflow researches scope, criteria and risks in parallel, then writes `spec.md`.
 - `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
-- `/sf:document [PATHS]` runs the analysis agents in parallel. Then it generates the documents in parallel. Then it integrates the documents into `docs/`.
+- `/sf:document [PATHS]` runs the `sf-document` workflow. The workflow analyzes the change, drafts the documents, then integrates them into `docs/`.
 
 ## Agents
 
@@ -48,6 +48,24 @@ the `sf-` prefix for that reason.
 
 Returns `{ specPath, criteria, risks }`, where the last two are counts. The three research
 agents return validated objects, so this path writes no files under `research/`.
+
+### sf-document
+
+`workflows/document.js`. Arguments — one of the two paths is enough:
+
+```json
+{
+  "specPath": "string — the spec or other artifact to read",
+  "implementationPath": "string — the implementation summary to read"
+}
+```
+
+Returns `{ changed }`, the list of documentation files written or edited. An empty list means
+the change needs no documentation. On a failure it returns `{ error }` and integrates nothing.
+
+The workflow applies both gates that `doc-gates.sh` applies for other hosts: the schemas take
+the place of the analysis gate, and a placeholder-marker test on each draft takes the place of
+the generation gate.
 
 ## Integration Contracts
 
