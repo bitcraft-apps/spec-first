@@ -40,6 +40,9 @@ Each command gives the same steps and the same checks to every host.
 - **Claude Code does the independent work in parallel.** `/sf:spec` and `/sf:document` run as
   workflow scripts. Every other host does the same steps in order.
 
+The spec stays on your machine. [Team Workflow](docs/team-workflow.md) shows how a team shares it
+through the ticket.
+
 ## Token Usage
 
 The table shows the typical range for each phase. The example is a small CLI tool with approximately 500 lines.
