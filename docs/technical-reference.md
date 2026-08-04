@@ -28,6 +28,33 @@ Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `descript
 of every session that has the plugin installed, used or not. An agent a workflow script starts
 needs no registration, so every prompt the workflows own lives in the script instead.
 
+### Model and effort routing
+
+| Agent | Model | Effort |
+| --- | --- | --- |
+| `scope`, `criteria`, `risks` in `sf-spec` | `haiku` | `low` |
+| `artifacts`, `implementation`, `inventory` in `sf-document` | `haiku` | `low` |
+| `synthesize-spec` in `sf-spec` | the caller's | the caller's |
+| `technical-docs`, `user-docs`, `integrate-docs` in `sf-document` | the caller's | the caller's |
+| `implement-minimal` | the caller's | the caller's |
+
+The six extraction agents produce short structured output from text they are given, so the
+cheapest tier at the lowest effort is enough. The others make judgment calls about what to
+build and what to write. They inherit the caller's tier, because that tier is the user's choice
+for the session. A named tier would downgrade a user on Opus and raise the bill for a user on
+Haiku.
+
+`effort` accepts `low`, `medium`, `high`, `xhigh`, `max`, or an integer.
+
+### Fields to leave out
+
+- `permissionMode`, `hooks` and `mcpServers` do nothing in a plugin agent file. Claude Code
+  logs a warning and points to `.claude/agents/` for that level of control.
+- `isolation: worktree` is valid frontmatter, but it is static. `--isolate` is a per-run flag,
+  so `/sf:implement` passes `isolation` to the Agent tool instead.
+- `skills` preloads a skill into a subagent. No agent needs it: `sf-spec` passes the template
+  path in `args`, and the synthesis agent reads the file.
+
 ## Workflows
 
 Workflow scripts live in `workflows/`. Claude Code loads them from that directory, so the
