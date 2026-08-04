@@ -4,6 +4,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 DOC_GATES_SH="$PROJECT_ROOT/scripts/doc-gates.sh"
 export DOC_GATES_SH
 
@@ -32,13 +35,13 @@ write_analysis_files() {
 @test "rejects a missing mode" {
     run run_doc_gates "$TEST_DIR"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Usage:"* ]]
+    assert_output_contains "Usage:"
 }
 
 @test "rejects an unknown mode" {
     run run_doc_gates "$TEST_DIR" bogus "$TEST_DIR/.sf"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Usage:"* ]]
+    assert_output_contains "Usage:"
 }
 
 @test "analysis passes when all three files exist" {
@@ -46,9 +49,9 @@ write_analysis_files() {
 
     run run_doc_gates "$TEST_DIR" analysis "$TEST_DIR/.sf"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS artifacts-summary.md"* ]]
-    [[ "$output" == *"PASS implementation-summary.md"* ]]
-    [[ "$output" == *"PASS docs-inventory.md"* ]]
+    assert_output_contains "PASS artifacts-summary.md"
+    assert_output_contains "PASS implementation-summary.md"
+    assert_output_contains "PASS docs-inventory.md"
 }
 
 @test "analysis names the missing file" {
@@ -56,8 +59,8 @@ write_analysis_files() {
 
     run run_doc_gates "$TEST_DIR" analysis "$TEST_DIR/.sf"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"FAIL implementation-summary.md: missing from $TEST_DIR/.sf/research"* ]]
-    [[ "$output" == *"FAIL docs-inventory.md"* ]]
+    assert_output_contains "FAIL implementation-summary.md: missing from $TEST_DIR/.sf/research"
+    assert_output_contains "FAIL docs-inventory.md"
 }
 
 @test "analysis ignores placeholder markers" {
@@ -74,8 +77,8 @@ write_analysis_files() {
 
     run run_doc_gates "$TEST_DIR" generation "$TEST_DIR/.sf"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS technical-docs.md"* ]]
-    [[ "$output" == *"PASS user-docs.md"* ]]
+    assert_output_contains "PASS technical-docs.md"
+    assert_output_contains "PASS user-docs.md"
 }
 
 @test "generation blocks every placeholder marker" {
@@ -85,7 +88,7 @@ write_analysis_files() {
 
         run run_doc_gates "$TEST_DIR" generation "$TEST_DIR/.sf"
         [ "$status" -eq 1 ]
-        [[ "$output" == *"FAIL technical-docs.md: contains a placeholder marker"* ]]
+        assert_output_contains "FAIL technical-docs.md: contains a placeholder marker"
     done
 }
 

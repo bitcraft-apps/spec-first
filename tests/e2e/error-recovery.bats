@@ -10,6 +10,8 @@ export PROJECT_ROOT
 # Require minimum BATS version for run flags
 bats_require_minimum_version 1.5.0
 
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 # Create a mock repo structure that validate-plugin.sh can run against
 setup_mock_repo() {
     local repo_dir="$1"
@@ -38,31 +40,6 @@ setup_mock_repo() {
     [ -f "$PROJECT_ROOT/README.md" ] && cp "$PROJECT_ROOT/README.md" "$repo_dir/"
     # Skip .claude-plugin/ — tests manipulate VERSION, so copying plugin.json/marketplace.json
     # would cause version mismatch failures. Version-match checks are conditional on file existence.
-}
-
-assert_success() {
-    [ "$status" -eq 0 ] || {
-        echo "Expected success (exit code 0), got: $status" >&2
-        echo "Output: $output" >&2
-        return 1
-    }
-}
-
-assert_failure() {
-    [ "$status" -ne 0 ] || {
-        echo "Expected failure (non-zero exit code), got: $status" >&2
-        echo "Output: $output" >&2
-        return 1
-    }
-}
-
-assert_output_contains() {
-    local expected="$1"
-    if [[ "$output" != *"$expected"* ]]; then
-        echo "Expected output to contain: $expected" >&2
-        echo "Actual output: $output" >&2
-        return 1
-    fi
 }
 
 test_info() {
