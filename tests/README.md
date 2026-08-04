@@ -68,7 +68,6 @@ make setup
 
 # Or manually:
 git submodule update --init --recursive
-chmod +x tests/run-tests.sh
 ```
 
 ### Running Tests
@@ -363,11 +362,15 @@ make setup
 ```
 
 **Permission Errors:**
+
+Scripts are committed executable, so nothing chmods them at runtime. An `exit 126`
+means a script lost its mode bit in the index:
 ```bash
-# Fix: Make scripts executable
-chmod +x tests/run-tests.sh
-chmod +x tests/bats-core/bin/bats
-chmod +x scripts/*.sh
+# Find it
+./scripts/check-script-permissions.sh
+
+# Fix it
+git update-index --chmod=+x <path>
 ```
 
 **Test Environment Issues:**

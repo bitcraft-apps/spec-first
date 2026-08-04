@@ -107,6 +107,16 @@ if [ -x "./scripts/check-workflow-scripts.sh" ]; then
     fi
 fi
 
+# Check every tracked shell script is committed executable (nothing chmods them at runtime)
+if [ -x "./scripts/check-script-permissions.sh" ]; then
+    if PERMS_OUTPUT=$(./scripts/check-script-permissions.sh 2>&1); then
+        print_status "Shell scripts are committed executable" 0
+    else
+        print_status "Shell scripts are committed executable" 1
+        print_info "$PERMS_OUTPUT"
+    fi
+fi
+
 # Check agents directory
 AGENTS_DIR="./agents"
 if [ -d "$AGENTS_DIR" ]; then

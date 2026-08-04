@@ -117,10 +117,7 @@ check_prerequisites() {
             exit 1
         fi
     fi
-    
-    # Make bats executable
-    chmod +x "$BATS_EXECUTABLE"
-    
+
     # Check if test files exist - organized directory approach
     local test_files_found=0
     
