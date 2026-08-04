@@ -1,6 +1,6 @@
 {
   "name": "spec-first",
-  "description": "Spec-first development for Claude Code: define a spec, implement it, and generate docs.",
+  "description": "Spec-first development: define a spec, implement it, and generate docs.",
   "owner": {
     "name": "bitcraft-apps"
   },
@@ -11,7 +11,7 @@
         "source": "github",
         "repo": "bitcraft-apps/spec-first"
       },
-      "description": "Claude Code plugin that guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal.",
+      "description": "Guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal. Installs as a Claude Code plugin, or as skills on 15+ other agent hosts.",
       "version": "1.3.1"
     }
   ]
