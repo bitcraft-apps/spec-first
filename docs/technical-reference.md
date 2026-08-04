@@ -197,7 +197,8 @@ first time each one runs.
 ## Setup
 
 - A host that reads skills from `.agents/skills`, or from a directory you pass to
-  `scripts/install.sh --dir`. On Claude Code, install the plugin instead.
+  `scripts/install.sh --dir`. [Supported hosts](supported-hosts.md) gives the directory each host
+  reads. On Claude Code, install the plugin instead.
 - A shell. The skills call the scripts in `scripts/`.
 - Subagents are optional. `Agent` tool support (`subagent_type`) makes the commands run the steps
   in parallel. Without it, the skills run the same steps in order.
