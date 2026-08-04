@@ -61,7 +61,6 @@ Claude Code has subagents. Use them to run the steps in three batches.
 - Use the **AskUserQuestion** tool to ask for the artifact locations.
 - Batch 1 (Parallel): analyze-artifacts, analyze-implementation, analyze-existing-docs
 - Gate 1: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh analysis ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
-- Batch 2 (Parallel): create-technical-docs, create-user-docs. They share terminology through
-  `$SF_DIR/research/doc-context.md`. One agent working alone does not need that file.
+- Batch 2 (Parallel): create-technical-docs, create-user-docs
 - Gate 2: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-gates.sh generation ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
 - Batch 3: integrate-docs

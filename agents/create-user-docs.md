@@ -15,7 +15,6 @@ Inputs:
 - `.sf/research/docs-inventory.md` (existing doc manifest)
 
 Output: `.sf/research/user-docs.md`
-Shared context: `.sf/research/doc-context.md`
 
 Sections — include ONLY if the user needs to act:
 - ## What Changed — one paragraph max. Skip if change is invisible to users.
@@ -30,7 +29,3 @@ Rules:
 - No extension points, architecture details, or implementation internals
 - Match doc weight to change weight. A safety net that "rarely triggers" needs one line, not a section.
 - If unclear whether something needs user docs, it doesn't
-
-Shared context convention:
-- If `.sf/research/doc-context.md` exists, read it for terminology decisions
-- After writing output, append terms and topics to doc-context.md under `## User Docs`
