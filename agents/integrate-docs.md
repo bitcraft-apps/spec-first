@@ -1,7 +1,7 @@
 ---
 name: integrate-docs
 description: Merge generated docs into existing project files. Use when doc drafts are ready to integrate into the repo.
-tools: Read, Write, Edit, MultiEdit, Glob
+tools: Read, Write, Edit, Glob
 maxTurns: 15
 ---
 
@@ -21,5 +21,5 @@ Rules:
 - Cut redundancy ruthlessly — if both inputs cover the same topic, keep only the best version
 - No cross-reference links between docs unless genuinely needed for navigation
 - No metadata headers, no traceability stamps
-- Edit/MultiEdit existing files; Write only when no existing file fits
+- Edit existing files; Write only when no existing file fits
 - Clean up research files after integration

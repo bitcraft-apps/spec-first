@@ -148,7 +148,7 @@ for skill_dir in ./skills/*/; do
 done
 print_info "Discovered ${#REQUIRED_AGENTS[@]} agents and ${#REQUIRED_SKILLS[@]} skills"
 # shellcheck disable=SC2034 # Used by validation checks below
-VALID_TOOLS=("Read" "Write" "Edit" "MultiEdit" "Bash" "Grep" "Glob" "LSP")
+VALID_TOOLS=("Read" "Write" "Edit" "Bash" "Grep" "Glob" "LSP")
 VALID_MODELS=("haiku")
 
 # Function to build agent pattern dynamically from REQUIRED_AGENTS array

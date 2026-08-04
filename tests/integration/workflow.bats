@@ -130,7 +130,7 @@ default_path() {
 
 @test "implementation agents have appropriate tools" {
     # Verify implement-minimal has implementation tools
-    grep -q "tools: Read, Write, Edit, MultiEdit, Bash" "$PROJECT_ROOT/agents/implement-minimal.md"
+    grep -q "tools: Read, Write, Edit, Bash" "$PROJECT_ROOT/agents/implement-minimal.md"
     
     # Check that implement-minimal works with specifications
     grep -q -i "spec" "$PROJECT_ROOT/agents/implement-minimal.md"
