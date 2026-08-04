@@ -5,6 +5,65 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/bitcraft-apps/spec-first/compare/v1.3.1...v2.0.0) (2026-08-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* run spec directory setup as a script ([#249](https://github.com/bitcraft-apps/spec-first/issues/249))
+* resolve artifact directory to .sf/ ([#248](https://github.com/bitcraft-apps/spec-first/issues/248))
+
+### Features
+
+* install sf skills in the shared .agents/skills location ([#253](https://github.com/bitcraft-apps/spec-first/issues/253)) ([bdcc095](https://github.com/bitcraft-apps/spec-first/commit/bdcc09510a4c0fe42b2509b095b1012bf8c923a7))
+* resolve artifact directory to .sf/ ([#248](https://github.com/bitcraft-apps/spec-first/issues/248)) ([559e55f](https://github.com/bitcraft-apps/spec-first/commit/559e55f5757ea7fec08987accebc9def113e7ebc))
+* ship /sf:document as the sf-document workflow ([#268](https://github.com/bitcraft-apps/spec-first/issues/268)) ([b11758b](https://github.com/bitcraft-apps/spec-first/commit/b11758b5e51ef31e139a275db04e5d627da103c8))
+* ship /sf:spec as the sf-spec workflow ([#267](https://github.com/bitcraft-apps/spec-first/issues/267)) ([08a3956](https://github.com/bitcraft-apps/spec-first/commit/08a3956283300615f83e18da4f7a3979d3b521d4))
+* validate spec and implementation without hooks ([#252](https://github.com/bitcraft-apps/spec-first/issues/252)) ([1d8618d](https://github.com/bitcraft-apps/spec-first/commit/1d8618d47e14b3317aa563358c96c73c6c00a46c))
+
+
+### Bug Fixes
+
+* **agents:** give analyze-* agents the Write tool ([#237](https://github.com/bitcraft-apps/spec-first/issues/237)) ([4bfe921](https://github.com/bitcraft-apps/spec-first/commit/4bfe9217248315d7e6e9b0c275d5d7ac88ba2302))
+* **agents:** resolve project root without CLAUDE.md ([#247](https://github.com/bitcraft-apps/spec-first/issues/247)) ([65a9a22](https://github.com/bitcraft-apps/spec-first/commit/65a9a22b7bd8d18e8a9226cab6b05ef3a630ad57))
+* drop allowed-tools from the skills ([#257](https://github.com/bitcraft-apps/spec-first/issues/257)) ([7caf024](https://github.com/bitcraft-apps/spec-first/commit/7caf024bf975eaeeb8a407096ccab54f0cd9be78))
+* drop Claude-only framing from marketplace metadata ([#299](https://github.com/bitcraft-apps/spec-first/issues/299)) ([2597582](https://github.com/bitcraft-apps/spec-first/commit/2597582fc417c29c893e2106021b59dc0f181995))
+* drop the shared doc-context.md scratch file ([#264](https://github.com/bitcraft-apps/spec-first/issues/264)) ([0ecc673](https://github.com/bitcraft-apps/spec-first/commit/0ecc6733fb345c4806bb940aafd93a2ea485d157))
+* gate on a marker shape, not the word placeholder ([#295](https://github.com/bitcraft-apps/spec-first/issues/295)) ([1296580](https://github.com/bitcraft-apps/spec-first/commit/1296580b62fb9b93c67fdbaaeb7ed960924a8efb))
+
+
+### Code Refactoring
+
+* commit script permissions instead of runtime chmod ([#281](https://github.com/bitcraft-apps/spec-first/issues/281)) ([ec7b939](https://github.com/bitcraft-apps/spec-first/commit/ec7b9390c33005540fa0b7ce258ba202aab02a4f))
+* **document:** run the gates as a script ([#250](https://github.com/bitcraft-apps/spec-first/issues/250)) ([8cbc5cf](https://github.com/bitcraft-apps/spec-first/commit/8cbc5cf8b245e5e4297297b2188b9d6785af9a59))
+* drop legacy MultiEdit from agent tool lists ([#265](https://github.com/bitcraft-apps/spec-first/issues/265)) ([61a8d4f](https://github.com/bitcraft-apps/spec-first/commit/61a8d4fb1bfa2d04f5cf4d926f656ceceaf035f7))
+* register one agent instead of twelve ([#269](https://github.com/bitcraft-apps/spec-first/issues/269)) ([8f36d49](https://github.com/bitcraft-apps/spec-first/commit/8f36d49ccbacce52a08cdd6d8c1bc3af9e23fd90))
+* run spec directory setup as a script ([#249](https://github.com/bitcraft-apps/spec-first/issues/249)) ([e0633f0](https://github.com/bitcraft-apps/spec-first/commit/e0633f0274afd05ba82d88a5b129a45bfa753e88))
+* **skills:** state a sequential path before the subagent path ([#251](https://github.com/bitcraft-apps/spec-first/issues/251)) ([22c6abd](https://github.com/bitcraft-apps/spec-first/commit/22c6abdfd964e945e7414993634fa3a6db27665c))
+* **tests:** use AGENTS.md as the repo marker ([#246](https://github.com/bitcraft-apps/spec-first/issues/246)) ([8a6ffa7](https://github.com/bitcraft-apps/spec-first/commit/8a6ffa795adaf6380c9be4ee545c0887b0e6fe7a))
+
+
+### Documentation
+
+* add a Getting Started guide ([#290](https://github.com/bitcraft-apps/spec-first/issues/290)) ([9f394cc](https://github.com/bitcraft-apps/spec-first/commit/9f394cc81e78efd829446157b236d9d463b1001f))
+* add CLI and React examples, regenerate the backend one ([#294](https://github.com/bitcraft-apps/spec-first/issues/294)) ([92d39b9](https://github.com/bitcraft-apps/spec-first/commit/92d39b9052eca024772e6751ab72226a769fc581))
+* add host skill loading check, fix false test docs ([#259](https://github.com/bitcraft-apps/spec-first/issues/259)) ([e9342db](https://github.com/bitcraft-apps/spec-first/commit/e9342dbc13a7c9ccf54f58087d3a8320da5f2660))
+* add team workflow guide ([#296](https://github.com/bitcraft-apps/spec-first/issues/296)) ([2ccaaf7](https://github.com/bitcraft-apps/spec-first/commit/2ccaaf707ec3b9a9ea67f65aec0b2149833bf048))
+* correct why print mode cannot do the host check ([#262](https://github.com/bitcraft-apps/spec-first/issues/262)) ([d95c70d](https://github.com/bitcraft-apps/spec-first/commit/d95c70d7f55d289b72a9bbc64b26abf63d24ded4))
+* give the skills directory per host ([#287](https://github.com/bitcraft-apps/spec-first/issues/287)) ([adbcf34](https://github.com/bitcraft-apps/spec-first/commit/adbcf3434099b367a6e0d34e6a1ab78d5e2a17c5))
+* record the model and effort routing ([#270](https://github.com/bitcraft-apps/spec-first/issues/270)) ([f783dab](https://github.com/bitcraft-apps/spec-first/commit/f783daba8fa2f3db32941df04e5aa8e0255ffe3c))
+* rewrite README.md and technical-reference.md in Simplified Technical English ([#245](https://github.com/bitcraft-apps/spec-first/issues/245)) ([6f1539e](https://github.com/bitcraft-apps/spec-first/commit/6f1539e3076a36d5500a27c1e56810bc065aa548))
+* say what sf does that plain prompting does not ([#291](https://github.com/bitcraft-apps/spec-first/issues/291)) ([e3c67e9](https://github.com/bitcraft-apps/spec-first/commit/e3c67e9b93e1f9b9bdf56dc5ad64921196d25da7))
+* state which agent hosts sf supports ([#256](https://github.com/bitcraft-apps/spec-first/issues/256)) ([caf6156](https://github.com/bitcraft-apps/spec-first/commit/caf615624fdb8b9afee67fab6d15326e1e411ab5))
+* state why every skill runs inline ([#271](https://github.com/bitcraft-apps/spec-first/issues/271)) ([e204146](https://github.com/bitcraft-apps/spec-first/commit/e2041466c30c00c5334bc55edc29e697f98dfc59))
+
+
+### Miscellaneous
+
+* cap workflow scripts at 200 lines ([#288](https://github.com/bitcraft-apps/spec-first/issues/288)) ([38829ba](https://github.com/bitcraft-apps/spec-first/commit/38829ba9b89c68fca11fd0b32462a1a00db6c358))
+* make the $ARGUMENTS check decidable ([#289](https://github.com/bitcraft-apps/spec-first/issues/289)) ([b6ebdca](https://github.com/bitcraft-apps/spec-first/commit/b6ebdca34e2256fc5d5050ae6ec8c28df65e1955))
+* validate manifests strictly in CI ([#266](https://github.com/bitcraft-apps/spec-first/issues/266)) ([f187e71](https://github.com/bitcraft-apps/spec-first/commit/f187e711fa50f0938cfd2b69833f8a037e839258))
+
 ## [1.3.1](https://github.com/bitcraft-apps/spec-first/compare/v1.3.0...v1.3.1) (2026-08-03)
 
 
