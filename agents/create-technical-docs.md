@@ -15,7 +15,6 @@ Inputs:
 - `.sf/research/docs-inventory.md` (existing doc manifest)
 
 Output: `.sf/research/technical-docs.md`
-Shared context: `.sf/research/doc-context.md`
 
 Sections — include ONLY if the change warrants it:
 - ## Overview — only for new features or architectural changes. Skip for config/parameter changes.
@@ -31,7 +30,3 @@ Rules:
 - No invented terminology — say what it does plainly
 - If a feature is automatic and invisible, one sentence is enough
 - If unclear whether something needs docs, it doesn't
-
-Shared context convention:
-- If `.sf/research/doc-context.md` exists, read it for terminology decisions
-- After writing output, append terms and topics to doc-context.md under `## Technical Docs`
