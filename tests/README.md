@@ -333,16 +333,19 @@ cd tests && ./run-tests.sh --tap
 The automated tests check that the install script writes the files. They do not check that a host
 loads them. Do this check by hand before a release.
 
-**Use an interactive session.** A headless print mode fails for two different reasons, both
-observed:
+**Use an interactive session.** Print mode cannot finish the check. pi 0.83.0 with `-p` loaded the
+skill and then hung until it was killed. The skills do not pre-approve the validation scripts, so
+the host asks permission, and print mode has nothing to answer with. The skills also ask the user
+to choose when a spec already exists.
 
-- GitHub Copilot CLI 0.0.346 with `-p` loaded no skill at all, not even a minimal probe skill in
-  the directory it reads. A print-mode result there says nothing about the skills.
-- pi 0.83.0 with `-p` loaded the skill and then hung until killed. The skills do not pre-approve
-  the validation scripts, so the host asks permission, and print mode has no way to answer.
+**Confirm the installed host version supports skills.** GitHub Copilot CLI 0.0.346 has no skills
+feature: the word `skills` does not appear anywhere in the shipped bundle. A host that supports no
+skills behaves like a host that fails to load them, so check the feature exists before reading a
+result as a failure.
 
-The skills also ask the user to choose when a spec already exists. That needs a session that can
-answer.
+**Ask the host to list its skills. Do not ask the model.** All three skills set
+`disable-model-invocation: true`, so they can be absent from the list the model sees while still
+loading correctly. Use the skill listing of the host itself.
 
 sf reaches hosts by two separate paths. Check the path you changed.
 
