@@ -119,6 +119,12 @@ jobs:
           chmod +x scripts/check-version-sync.sh
           ./scripts/check-version-sync.sh
 
+      - name: Validate workflow scripts load
+        run: |
+          echo "Validating workflows/*.js load..."
+          chmod +x scripts/check-workflow-scripts.sh
+          ./scripts/check-workflow-scripts.sh
+
       - name: Validate hooks.json
         run: |
           echo "Validating hooks/hooks.json..."

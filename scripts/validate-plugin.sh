@@ -97,6 +97,16 @@ if [ -x "./scripts/check-version-sync.sh" ]; then
     fi
 fi
 
+# Check every workflow script is loadable (plugin validate --strict ignores workflows/)
+if [ -x "./scripts/check-workflow-scripts.sh" ]; then
+    if WORKFLOW_OUTPUT=$(./scripts/check-workflow-scripts.sh 2>&1); then
+        print_status "Workflow scripts load" 0
+    else
+        print_status "Workflow scripts load" 1
+        print_info "$WORKFLOW_OUTPUT"
+    fi
+fi
+
 # Check agents directory
 AGENTS_DIR="./agents"
 if [ -d "$AGENTS_DIR" ]; then
