@@ -1,6 +1,6 @@
 # Makefile for Spec First
 
-.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup install validate version-sync clean
+.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup install lint pre-commit validate version-sync clean
 
 # Default target
 help:
@@ -21,6 +21,8 @@ help:
 	@echo "  install           Install the skills in the shared .agents/skills location"
 	@echo "  validate          Validate framework configuration"
 	@echo "  version-sync      Check all version references agree"
+	@echo "  lint              Run ShellCheck over every shell script"
+	@echo "  pre-commit        Run lint, version-sync, validate and unit tests"
 	@echo "  clean             Clean up test artifacts"
 	@echo ""
 	@echo "Test filtering:"
@@ -91,6 +93,24 @@ test-parallel: setup
 # Pass options with ARGS, for example: make install ARGS="--dir .agents/skills"
 install:
 	@./scripts/install.sh $(ARGS)
+
+# Lint every shell script outside the bats-core submodule
+lint:
+	@if ! command -v shellcheck >/dev/null 2>&1; then \
+		echo "❌ shellcheck not installed. Install with: brew install shellcheck"; \
+		exit 1; \
+	fi
+	@echo "🔍 Linting shell scripts..."
+	@find . -name '*.sh' \
+		-not -path './.git/*' \
+		-not -path './node_modules/*' \
+		-not -path './tests/bats-core/*' \
+		| xargs shellcheck -x
+	@echo "✅ Lint complete!"
+
+# Fast local mirror of CI: lint, version sync, plugin validation, unit tests
+pre-commit: lint version-sync validate test-unit
+	@echo "✅ Pre-commit checks passed!"
 
 # Validate framework
 validate: setup
