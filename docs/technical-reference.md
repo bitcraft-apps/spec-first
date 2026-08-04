@@ -20,6 +20,15 @@ The steps below are the Claude Code path.
 - `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
 - `/sf:document [PATHS]` runs the `sf-document` workflow. The workflow analyzes the change, drafts the documents, then integrates them into `docs/`.
 
+### Every skill runs inline
+
+Skill frontmatter accepts `context: fork`, which runs the skill in a subagent. No sf skill sets
+it. Each of the three stops to ask the user a question: `/sf:spec` asks about vague requirements
+and about update-or-new, `/sf:implement` asks where the specification is, and `/sf:document`
+asks where the artifacts are. A fork cannot ask, and by default it reports back as a background
+task instead of holding the turn. So all three stay inline, and they hand the parallel work to
+a workflow instead.
+
 ## Agents
 
 Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). Read the agent files for the details.
