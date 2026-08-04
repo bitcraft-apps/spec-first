@@ -2,34 +2,37 @@
 
 ## Must Pass
 
-1. **Rate limit enforced per API key**
-   - Send 101 requests in 60 seconds with same key → 429 on request 101
-   - Send 100 requests in 60 seconds with same key → all succeed (200/201)
+1. **The limit holds for one key**
+   - 100 calls to `canRequest("key-a")` → every call returns true
+   - Call 101 → returns false
 
-2. **Returns 429 status code**
-   - Request exceeds limit → HTTP 429 response
-   - Response body includes `Retry-After` header with seconds
+2. **Tokens refill from the time that passed**
+   - Empty the bucket, then advance the clock 60 seconds
+   - The next call returns true
 
-3. **Configurable burst capacity**
-   - Accept `RATE_LIMITER_BURST` env var or config parameter
-   - Default burst = 100 (tokens)
-   - Allow 100 + burst tokens in first refill window
+3. **Keys do not share a bucket**
+   - Empty the bucket for `key-a`
+   - `canRequest("key-b")` returns true
 
-4. **Tokens refill at 100 req/min rate**
-   - Make 101 requests (hit limit)
-   - Wait 60 seconds
-   - Next request succeeds (tokens refilled)
+4. **`capacity` sets the burst size**
+   - `new RateLimiter({ capacity: 5 })` → 5 calls pass, call 6 fails
+   - The default capacity is 100
 
-5. **Per-key isolation**
-   - Two different API keys → separate limits
-   - Key A at limit does not block key B requests
+5. **Invalid configuration throws**
+   - `rate` of 0 or less → throws at construction
+   - `capacity` below 0 → throws at construction
+
+6. **The middleware answers 429**
+   - Empty the bucket, then send one more request
+   - Status 429, header `Retry-After: 60`, and `next` is not called
+   - A request under the limit calls `next` and sends no status
 
 ## Edge Cases (Must Not Fail)
 
-- Requests with no API key → consistent behavior (block or pass, documented)
-- Concurrent requests same key → no race conditions (correct count)
-- Burst = 0 → system still enforces base rate limit
+- `capacity: 0` → every call fails, because the bucket holds no token
+- A request with no key header → the limiter uses one shared key
+- A key that nobody uses for one hour → the limiter drops the bucket
 
 ## Definition of Done
 
-All 5 "Must Pass" criteria pass. Can test via integration test or manual requests.
+All 6 "Must Pass" criteria pass in `rate-limiter.test.ts`. Fake timers move the clock.

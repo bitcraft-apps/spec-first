@@ -1,65 +1,68 @@
 # Rate Limiter
 
-Token-bucket rate limiter for API servers. Per-key, in-memory, single instance.
+Limits each API key to 100 requests a minute. A caller over the limit gets HTTP 429.
 
-## Install
+## Add it to an API
 
-```
-npm install
-npx tsc
-```
-
-## Quick Start
-
-### Express Middleware
-
-```ts
+```typescript
+import express from "express";
 import { rateLimiterMiddleware } from "./rate-limiter-middleware.js";
 
+const app = express();
 app.use(rateLimiterMiddleware());
 ```
 
-The middleware reads the `x-api-key` header to identify callers. Requests without the header are grouped under `"anonymous"`.
+The middleware reads the `x-api-key` request header. Every key gets its own quota.
 
-### Standalone
+## Use the limiter directly
 
-```ts
+```typescript
 import { RateLimiter } from "./rate-limiter.js";
 
 const limiter = new RateLimiter();
 
-if (limiter.canRequest("user-key-123")) {
-  // proceed
-} else {
-  // rejected — quota exceeded
+if (!limiter.canRequest(apiKey)) {
+  return reject();
 }
 ```
 
 ## Configuration
 
-Both `RateLimiter` and `rateLimiterMiddleware` accept the same optional config:
+| Option | Type | Default | Purpose |
+|--------|------|---------|---------|
+| `rate` | `number` | `100` | Requests each minute for one key |
+| `capacity` | `number` | `100` | Burst size, the requests one key can send at once |
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `capacity` | `100` | Max burst tokens per key. Must be >= 0. |
-| `rate` | `100` | Tokens refilled per minute. Must be > 0. |
-
-```ts
-rateLimiterMiddleware({ capacity: 50, rate: 30 });
+```typescript
+rateLimiterMiddleware({ rate: 600, capacity: 50 });
 ```
 
-Setting `capacity: 0` rejects all requests (useful for kill switches).
+The example allows 600 requests a minute, and 50 at one time.
 
-## Response When Limited
+A `rate` of 0 or less, or a `capacity` below 0, throws when the process starts.
 
-When a key exceeds its quota, the middleware returns:
+## What the caller sees
 
-- Status: `429 Too Many Requests`
-- Header: `Retry-After: 60`
-- Body: `{ "error": "Too Many Requests" }`
+Over the limit:
 
-## Limits
+- Status `429`
+- Header `Retry-After: 60`
+- Body `{ "error": "Too Many Requests" }`
 
-- In-memory only. State resets on restart.
-- Single instance. Multiple server instances each track independently.
-- Idle keys are evicted after 1 hour.
+The quota returns as time passes, not all at once. At the default rate, one request becomes
+available again every 0.6 seconds.
+
+## What to expect
+
+- A key with no requests for a minute has its full quota.
+- A request with no `x-api-key` header shares one quota with every other such request.
+- A restart gives every key a full quota. The state lives in memory only.
+- Two processes each keep their own count, so the quota for one key doubles. Run one process,
+  or move the state to a shared store.
+
+## Run the tests
+
+```bash
+npm install
+npm test
+```

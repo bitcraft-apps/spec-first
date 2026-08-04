@@ -22,6 +22,7 @@ Review the generated spec, then proceed to implementation.
 ```
 
 Generates working code from the spec, following existing patterns in your codebase.
+This project held only `package.json`, so the code follows the TypeScript and vitest defaults.
 
 ## 3. Document
 
@@ -42,12 +43,13 @@ The [`output/`](output/) directory contains the complete result of running this 
 
 **Deliverables:**
 - [`rate-limiter.ts`](output/rate-limiter.ts) — token-bucket implementation
-- [`rate-limiter.test.ts`](output/rate-limiter.test.ts) — tests
+- [`rate-limiter.test.ts`](output/rate-limiter.test.ts) — 11 tests, run with `npm test`
 - [`rate-limiter-middleware.ts`](output/rate-limiter-middleware.ts) — HTTP middleware
 - [`docs.md`](output/docs.md) — user-facing documentation
 
 **Pipeline artifacts** ([`output/.sf/`](output/.sf/)):
 - [`spec.md`](output/.sf/spec.md) — specification
 - [`implementation-summary.md`](output/.sf/implementation-summary.md) — what implement produced
+- [`research/`](output/.sf/research/) — the analysis behind each step
 
-Generated on 2026-03-16 by running `/sf:spec` → `/sf:implement` → `/sf:document` sequentially.
+Generated on 2026-08-04 by running `/sf:spec` → `/sf:implement` → `/sf:document` sequentially.

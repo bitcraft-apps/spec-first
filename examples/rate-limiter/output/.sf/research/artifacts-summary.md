@@ -1,31 +1,34 @@
 # Artifacts Summary
 
-**Project**: Token-Bucket Rate Limiter — 100 req/min per API key, in-memory, single instance
+**Project**: Token-Bucket Rate Limiter — 100 requests per minute for each API key, one process
 
 ## Requirements
-- Token-bucket algorithm: 100 requests/minute per API key
-- HTTP 429 with `Retry-After: 60` when quota exceeded
-- Configurable burst capacity (default 100, must be >= 0)
-- Per-API-key in-memory tracking with independent limits
-- Core function: `canRequest(apiKey: string): bool`
-- Monotonic clock (`performance.now()`) for refill timing
-- TTL eviction for idle keys (>1 hour)
+- Token-bucket algorithm, one bucket for each API key
+- 100 requests per minute, the default rate
+- Configurable burst capacity, the size of the bucket
+- HTTP 429 with `Retry-After: 60` when the bucket is empty
+- `canRequest(apiKey: string): boolean` as the one entry point
+- Refill from the elapsed time, read from `performance.now()`
+- Drop a bucket that nobody used for one hour
+- Throw at construction on invalid configuration
 
 ## Acceptance Criteria (All Passed)
-1. 100 requests with same key in 60s all succeed
-2. Request 101 returns 429
-3. After 60s inactivity, tokens refill
-4. Two different keys have independent limits
-5. Burst capacity configurable (default: 100)
-6. Burst=0 enforces rate limit (all rejected)
-7. Config rejects rate <= 0 or burst < 0
+1. 100 requests with one key all succeed
+2. Request 101 with the same key fails
+3. The bucket refills after 60 seconds, and the next request succeeds
+4. Two keys hold independent buckets
+5. `capacity` sets the burst size, and the default is 100
+6. A `rate` of 0 or less, or a `capacity` below 0, throws at construction
+7. `capacity: 0` fails every request
+8. The middleware answers 429 with `Retry-After: 60`, and calls `next` under the limit
 
 ## Scope Boundaries
-- **In**: Token-bucket core, middleware, unit tests, configurable capacity
-- **Out**: Distributed rate limiting, persistence, X-RateLimit-* headers, per-endpoint limits, dynamic config
+- **In**: the limiter, the middleware, unit tests, configurable capacity and rate
+- **Out**: persistence, shared state between processes, `X-RateLimit-*` headers,
+  per endpoint limits, a change to the rate at run time, a computed `Retry-After`
 
 ## Risks
-1. Restart resets state → Accepted for MVP
-2. Multi-instance multiplies quota → Out of scope
-3. Memory growth → 1-hour TTL eviction
-4. Invalid config → Validation at init
+1. A restart clears every bucket → accepted, the window is 60 seconds
+2. More than one process multiplies the quota → out of scope, one process
+3. A clock that moves backward → `performance.now()` only moves forward
+4. Memory growth from unused keys → drop a bucket after one idle hour
