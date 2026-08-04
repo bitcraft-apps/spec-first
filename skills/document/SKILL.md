@@ -21,7 +21,7 @@ Read `.sf/implementation-summary.md` if it exists.
 
 ## Input Resolution
 
-1. If the skill has arguments: use them as artifact and implementation paths
+1. If `$ARGUMENTS` is non-empty: use it as the artifact and implementation paths
 2. Else if `.sf/spec.md` and `.sf/implementation-summary.md` exist: use them
 3. Else: ask the user where the artifacts are. Wait for the answer.
 

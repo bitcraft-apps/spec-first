@@ -262,12 +262,14 @@ for skill in "${REQUIRED_SKILLS[@]}"; do
             print_status "$skill has description field" 1
         fi
 
-        # Check for $ARGUMENTS usage
-        # shellcheck disable=SC2016 # Intentionally matching literal $ARGUMENTS
-        if grep -q '\$ARGUMENTS' "$SKILL_FILE"; then
-            print_status "$skill uses \$ARGUMENTS placeholder" 0
-        else
-            print_warning "$skill doesn't use \$ARGUMENTS (may be intentional)"
+        # A skill that advertises arguments must interpolate them; one that doesn't has nothing to check
+        if grep -q "^argument-hint:" "$SKILL_FILE"; then
+            # shellcheck disable=SC2016 # Intentionally matching literal $ARGUMENTS
+            if grep -q '\$ARGUMENTS' "$SKILL_FILE"; then
+                print_status "$skill uses \$ARGUMENTS placeholder" 0
+            else
+                print_status "$skill declares argument-hint but never uses \$ARGUMENTS" 1
+            fi
         fi
 
         # Check for delegation, to a registered agent or to a workflow

@@ -200,6 +200,49 @@ AGENT
     assert_output_contains "1 skill"
 }
 
+@test "validate-plugin ignores \$ARGUMENTS in a skill that declares no argument-hint" {
+    cd "$FIXTURE_DIR"
+    run ./scripts/validate-plugin.sh
+    [ "$status" -eq 0 ]
+    refute_output_contains "ARGUMENTS"
+}
+
+@test "validate-plugin accepts a skill that declares argument-hint and uses \$ARGUMENTS" {
+    cat > "$FIXTURE_DIR/skills/test-skill/SKILL.md" <<'SKILL'
+---
+name: test-skill
+description: A test skill
+argument-hint: "[INPUT]"
+---
+
+# Test Skill
+
+Uses test-agent with $ARGUMENTS.
+SKILL
+    cd "$FIXTURE_DIR"
+    run ./scripts/validate-plugin.sh
+    [ "$status" -eq 0 ]
+    assert_output_contains "test-skill uses \$ARGUMENTS placeholder"
+}
+
+@test "validate-plugin fails a skill that declares argument-hint without \$ARGUMENTS" {
+    cat > "$FIXTURE_DIR/skills/test-skill/SKILL.md" <<'SKILL'
+---
+name: test-skill
+description: A test skill
+argument-hint: "[INPUT]"
+---
+
+# Test Skill
+
+Uses test-agent to do things.
+SKILL
+    cd "$FIXTURE_DIR"
+    run ./scripts/validate-plugin.sh
+    [ "$status" -eq 1 ]
+    assert_output_contains "declares argument-hint but never uses \$ARGUMENTS"
+}
+
 # --- Summary output ---
 
 @test "validate-plugin shows summary with pass/fail counts" {
