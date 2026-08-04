@@ -34,7 +34,8 @@ git clone https://github.com/bitcraft-apps/spec-first && cd spec-first
 ./scripts/install.sh --dir .agents/skills    # one project only
 ```
 
-See [Supported hosts](#supported-hosts) for the host list.
+[Supported hosts](docs/supported-hosts.md) gives the directory each host reads. Hosts that read
+somewhere else need `--dir`; see the [host table](#supported-hosts) below.
 
 A checkout installs by symlink. A downloaded release installs by copy. To remove the skills, delete them:
 
@@ -117,8 +118,11 @@ Your token counts change with the size of the codebase, the complexity of the fe
 
 | Host | Install | What runs |
 |------|---------|-----------|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | `claude plugin install sf@spec-first` | The three commands, parallel subagents, and validation hooks |
-| pi, opencode, Codex CLI, GitHub Copilot CLI, Gemini CLI, Cursor, Zed, Amp, Goose, Crush, Kilo Code, Warp, Factory Droid, OpenHands | `./scripts/install.sh` — `.agents/skills` | The three commands in order. The skills call the validation scripts, so the same checks run. |
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — reads `~/.claude/skills` | `claude plugin install sf@spec-first` | The three commands, parallel subagents, and validation hooks |
+| Hosts that read `.agents/skills`: pi, opencode, Codex CLI, GitHub Copilot CLI, Gemini CLI, Cursor, Zed, Amp, Goose, Crush, Kilo Code, Warp, Factory Droid, OpenHands | `./scripts/install.sh` | The three commands in order. The skills call the validation scripts, so the same checks run. |
+| Hosts that read their own directory: Cline (`~/.cline/skills`), Qwen Code (`~/.qwen/skills`), iFlow CLI (`~/.iflow/skills`) | `./scripts/install.sh --dir <that directory>` | Same as above |
 | Any other host with a skills directory | `./scripts/install.sh --dir <dir>` | Same as above |
 
-Some hosts read a different directory. Cline, Qwen Code and iFlow CLI need `--dir`. Check the skill documentation of your host for the directories it reads, then pass one with `--dir`.
+[Supported hosts](docs/supported-hosts.md) gives the directory each host reads, the documentation it
+came from, and the version it was read at. A host not listed there: check its skill documentation
+for the directory it reads, then pass that with `--dir`.

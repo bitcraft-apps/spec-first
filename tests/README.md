@@ -332,8 +332,8 @@ use `install.sh` to check this path.
 
 ### Skills directory path — every other host
 
-1. Install the skills. Check the skill documentation of your host for the directory it reads,
-   then pass it with `--dir` if it is not `.agents/skills`:
+1. Install the skills. [Supported hosts](../docs/supported-hosts.md) gives the directory each host
+   reads; pass it with `--dir` if it is not `.agents/skills`:
 
    ```bash
    ./scripts/install.sh                       # .agents/skills
