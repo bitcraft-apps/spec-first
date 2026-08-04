@@ -1,5 +1,6 @@
 {
   "name": "spec-first",
+  "description": "Spec-first development for Claude Code: define a spec, implement it, and generate docs.",
   "owner": {
     "name": "bitcraft-apps"
   },

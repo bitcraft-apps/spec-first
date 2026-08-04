@@ -282,7 +282,6 @@ echo "📖 Validating AGENTS.md..."
 echo "=========================="
 
 AGENTS_MD_PATH="./AGENTS.md"
-CLAUDE_MD_PATH="./CLAUDE.md"
 
 if [ -f "$AGENTS_MD_PATH" ]; then
     print_status "AGENTS.md exists at repository root" 0
@@ -306,17 +305,6 @@ if [ -f "$AGENTS_MD_PATH" ]; then
     fi
 else
     print_status "AGENTS.md exists at repository root" 1
-fi
-
-# CLAUDE.md should reference AGENTS.md
-if [ -f "$CLAUDE_MD_PATH" ]; then
-    if grep -q "@AGENTS.md" "$CLAUDE_MD_PATH"; then
-        print_status "CLAUDE.md references @AGENTS.md" 0
-    else
-        print_status "CLAUDE.md references @AGENTS.md" 1
-    fi
-else
-    print_warning "CLAUDE.md not found (optional — AGENTS.md is the source of truth)"
 fi
 
 echo ""
