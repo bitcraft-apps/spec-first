@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Verifies every workflows/*.js script can be loaded by the Claude Code workflow loader.
+# Verifies every workflows/*.js script stays under the AGENTS.md size limit and can be
+# loaded by the Claude Code workflow loader.
 # `claude plugin validate --strict` ignores workflows/ entirely, and a script the loader
 # rejects only warns at load time — the failure surfaces later as `Workflow "x" not found`.
 # Must be run from the repository root.
@@ -98,6 +99,15 @@ names=""
 for wf in ./workflows/*.js; do
     [ -f "$wf" ] || continue
     base=$(basename "$wf")
+
+    # AGENTS.md caps a workflow script at 200 lines. The agent cap cannot apply unchanged:
+    # one script holds several prompts plus their schemas.
+    lines=$(awk 'END { print NR }' "$wf")
+    if [ "$lines" -gt 200 ]; then
+        echo "FAIL: $base has $lines lines (max 200)"
+        failed=1
+        continue
+    fi
 
     # The loader skips any file that is not .js, and the parser needs meta first.
     if ! head -1 "$wf" | grep -q '^export const meta = {$'; then

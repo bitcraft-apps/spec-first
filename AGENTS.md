@@ -25,6 +25,7 @@ Spec First — minimalist development workflow.
 
 - Agents: 50 lines max
 - Skills: 75 lines max
+- Workflow scripts: 200 lines max
 - Self-documenting through clear naming
 
 ## Development Checklist
