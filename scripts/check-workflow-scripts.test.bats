@@ -43,6 +43,36 @@ write_workflow() {
     [[ "$output" == *"PASS: 1 workflow script(s) load"* ]]
 }
 
+# Appends filler statements until the script has the given number of lines.
+pad_workflow() {
+    local file="$1" target="$2" current
+    current=$(awk 'END { print NR }' "workflows/$file")
+    while [ "$current" -lt "$target" ]; do
+        echo "log('filler')" >> "workflows/$file"
+        current=$((current + 1))
+    done
+}
+
+@test "a workflow script at the 200 line limit passes" {
+    write_workflow "spec.js" "  name: 'sf-spec',
+  description: 'does a thing',"
+    pad_workflow "spec.js" 200
+
+    run "$CHECKER"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"PASS: 1 workflow script(s) load"* ]]
+}
+
+@test "a workflow script over 200 lines fails" {
+    write_workflow "spec.js" "  name: 'sf-spec',
+  description: 'does a thing',"
+    pad_workflow "spec.js" 201
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"spec.js has 201 lines (max 200)"* ]]
+}
+
 @test "an empty workflows directory passes" {
     run "$CHECKER"
     [ "$status" -eq 0 ]
