@@ -3,12 +3,12 @@
 ## Overview
 
 - 3 commands. Each one is a skill that states the steps and the gates for one agent to run in order.
-- On Claude Code, the same 3 commands start 13 agent invocations instead.
-- 7 research agents use the Haiku model.
-- 5 synthesis and implementation agents use the model of the caller.
-- 1 built-in Explore subagent finds patterns.
+- On Claude Code, `/sf:spec` and `/sf:document` run as workflow scripts, which start 4 and 6
+  agents. `/sf:implement` runs the built-in Explore subagent, then `implement-minimal`.
+- `agents/` registers 1 subagent. The workflow scripts hold the other prompts, so those agents
+  cost no session context.
 - Steps that write research output write it to `.sf/research/`. Git ignores this directory. The
-  `sf-spec` workflow passes results in memory instead.
+  workflows pass results in memory instead.
 
 ## Commands
 
@@ -23,6 +23,10 @@ The steps below are the Claude Code path.
 ## Agents
 
 Agent files live in `agents/`. Each file has YAML frontmatter: `name`, `description`, `tools` (required), `model` (optional, only `haiku`), `maxTurns` (optional turn limit). Read the agent files for the details.
+
+`agents/` holds `implement-minimal` only. A registered subagent appears in the agent inventory
+of every session that has the plugin installed, used or not. An agent a workflow script starts
+needs no registration, so every prompt the workflows own lives in the script instead.
 
 ## Workflows
 
@@ -163,7 +167,7 @@ first time each one runs.
   in parallel. Without it, the skills run the same steps in order.
 - Hooks are optional. Only Claude Code loads `hooks/hooks.json`. The skills call the same scripts.
 - Haiku model access for research agents
-- LSP is optional. If LSP is not available, `analyze-implementation` uses Grep and Glob.
+- LSP is optional. Without it, the implementation analysis in `sf-document` uses Grep and Glob.
 
 ### Artifact directory
 

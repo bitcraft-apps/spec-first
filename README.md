@@ -51,8 +51,8 @@ Write your first spec:
 ```
 Researching requirements...
 
-  Batch 1 (parallel): define-scope, create-criteria, identify-risks
-  Batch 2: synthesize-spec
+  Research (parallel): scope, criteria, risks
+  Synthesis: spec.md
 
 Spec written to .sf/spec.md
 ```
@@ -82,16 +82,16 @@ Document it:
 ```
 
 ```
-Batch 1 (parallel): analyze-artifacts, analyze-implementation, analyze-existing-docs
-Batch 2 (parallel): create-technical-docs, create-user-docs
-Batch 3: integrate-docs
+Analysis (parallel): artifacts, implementation, existing docs
+Drafting (parallel): technical, user
+Integration: merge into the existing docs
 
 Updated: docs/middleware.md (added rate limiter section)
 ```
 
 ## How it works
 
-Each command gives the same steps and the same checks to every host. One agent does the steps in order. On Claude Code, specialized subagents run the same steps in parallel. The spec controls the implement step. The agent does not write code without a spec.
+Each command gives the same steps and the same checks to every host. One agent does the steps in order. On Claude Code, `/sf:spec` and `/sf:document` run the same steps as workflow scripts, which do the independent work in parallel. The spec controls the implement step. The agent does not write code without a spec.
 
 ## Token Usage
 
