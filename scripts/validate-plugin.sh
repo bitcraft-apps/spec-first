@@ -87,27 +87,13 @@ else
     print_status "VERSION file exists" 1
 fi
 
-# Check plugin.json version matches VERSION file
-if [ -n "$VERSION_CONTENT" ] && [ -f "./.claude-plugin/plugin.json" ] && command -v jq &>/dev/null; then
-    MANIFEST_VERSION=$(jq -r '.version // empty' "./.claude-plugin/plugin.json" 2>/dev/null || true)
-    if [ -n "$MANIFEST_VERSION" ]; then
-        if [ "$MANIFEST_VERSION" = "$VERSION_CONTENT" ]; then
-            print_status "plugin.json version matches VERSION file ($MANIFEST_VERSION)" 0
-        else
-            print_status "plugin.json version matches VERSION file (got $MANIFEST_VERSION, expected $VERSION_CONTENT)" 1
-        fi
-    fi
-fi
-
-# Check marketplace.json version matches VERSION file
-if [ -n "$VERSION_CONTENT" ] && [ -f "./.claude-plugin/marketplace.json" ] && command -v jq &>/dev/null; then
-    MARKETPLACE_VERSION=$(jq -r '.plugins[0].version // empty' "./.claude-plugin/marketplace.json" 2>/dev/null || true)
-    if [ -n "$MARKETPLACE_VERSION" ]; then
-        if [ "$MARKETPLACE_VERSION" = "$VERSION_CONTENT" ]; then
-            print_status "marketplace.json version matches VERSION file ($MARKETPLACE_VERSION)" 0
-        else
-            print_status "marketplace.json version matches VERSION file (got $MARKETPLACE_VERSION, expected $VERSION_CONTENT)" 1
-        fi
+# Check every version reference agrees (plugin.json, marketplace.json, release-please manifest)
+if [ -x "./scripts/check-version-sync.sh" ]; then
+    if SYNC_OUTPUT=$(./scripts/check-version-sync.sh 2>&1); then
+        print_status "Version references are in sync ($VERSION_CONTENT)" 0
+    else
+        print_status "Version references are in sync" 1
+        print_info "$SYNC_OUTPUT"
     fi
 fi
 

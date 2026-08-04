@@ -6,6 +6,7 @@
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
 VALIDATE_SCRIPT="$PROJECT_ROOT/scripts/validate-plugin.sh"
+SYNC_SCRIPT="$PROJECT_ROOT/scripts/check-version-sync.sh"
 
 setup() {
     FIXTURE_DIR="$(mktemp -d)"
@@ -15,10 +16,20 @@ setup() {
     mkdir -p "$FIXTURE_DIR/agents"
     mkdir -p "$FIXTURE_DIR/skills/test-skill"
     mkdir -p "$FIXTURE_DIR/scripts"
+    mkdir -p "$FIXTURE_DIR/.claude-plugin"
 
     # Copy the validation script so it can find SCRIPT_DIR/../VERSION
     cp "$VALIDATE_SCRIPT" "$FIXTURE_DIR/scripts/validate-plugin.sh"
     chmod +x "$FIXTURE_DIR/scripts/validate-plugin.sh"
+
+    # validate-plugin.sh delegates version checks to this script
+    cp "$SYNC_SCRIPT" "$FIXTURE_DIR/scripts/check-version-sync.sh"
+    chmod +x "$FIXTURE_DIR/scripts/check-version-sync.sh"
+
+    # Version references, all agreeing with VERSION above
+    printf '{"name":"sf","version":"1.0.0"}\n' > "$FIXTURE_DIR/.claude-plugin/plugin.json"
+    printf '{"plugins":[{"name":"sf","version":"1.0.0"}]}\n' > "$FIXTURE_DIR/.claude-plugin/marketplace.json"
+    printf '{".":"1.0.0"}\n' > "$FIXTURE_DIR/.release-please-manifest.json"
 
     # Minimal valid agent
     cat > "$FIXTURE_DIR/agents/test-agent.md" <<'AGENT'
@@ -63,6 +74,14 @@ teardown() {
     rm -rf "$FIXTURE_DIR"
 }
 
+# Update every version reference at once, so the sync check keeps passing
+set_fixture_version() {
+    echo "$1" > "$FIXTURE_DIR/VERSION"
+    printf '{"name":"sf","version":"%s"}\n' "$1" > "$FIXTURE_DIR/.claude-plugin/plugin.json"
+    printf '{"plugins":[{"name":"sf","version":"%s"}]}\n' "$1" > "$FIXTURE_DIR/.claude-plugin/marketplace.json"
+    printf '{".":"%s"}\n' "$1" > "$FIXTURE_DIR/.release-please-manifest.json"
+}
+
 # --- Repo root detection ---
 
 @test "validate-plugin exits 1 when not at repo root" {
@@ -99,11 +118,26 @@ teardown() {
 }
 
 @test "validate-plugin accepts valid version format" {
-    echo "2.5.9" > "$FIXTURE_DIR/VERSION"
+    set_fixture_version "2.5.9"
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 0 ]
     [[ "$output" == *"VERSION file has valid format"* ]]
+}
+
+@test "validate-plugin reports version references in sync" {
+    cd "$FIXTURE_DIR"
+    run ./scripts/validate-plugin.sh
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Version references are in sync (1.0.0)"* ]]
+}
+
+@test "validate-plugin fails when a version reference drifts" {
+    printf '{"name":"sf","version":"9.9.9"}\n' > "$FIXTURE_DIR/.claude-plugin/plugin.json"
+    cd "$FIXTURE_DIR"
+    run ./scripts/validate-plugin.sh
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"plugin.json version is 9.9.9, expected 1.0.0"* ]]
 }
 
 # --- Directory structure ---

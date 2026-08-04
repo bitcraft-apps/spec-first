@@ -1,6 +1,6 @@
 # Makefile for Spec First
 
-.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup install validate clean
+.PHONY: help test test-verbose test-integration test-version test-unit test-e2e test-parallel setup install validate version-sync clean
 
 # Default target
 help:
@@ -20,6 +20,7 @@ help:
 	@echo "  setup             Initialize git submodules and setup"
 	@echo "  install           Install the skills in the shared .agents/skills location"
 	@echo "  validate          Validate framework configuration"
+	@echo "  version-sync      Check all version references agree"
 	@echo "  clean             Clean up test artifacts"
 	@echo ""
 	@echo "Test filtering:"
@@ -140,6 +141,10 @@ version:
 
 version-info:
 	@./scripts/version.sh info
+
+# Verify VERSION, plugin.json, marketplace.json and the release-please manifest agree
+version-sync:
+	@./scripts/check-version-sync.sh
 
 # Quick development cycle
 dev: clean setup test-verbose
