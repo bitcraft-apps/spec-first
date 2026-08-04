@@ -18,13 +18,15 @@ tests/
 │   ├── hooks.bats               # Hook execution and output
 │   ├── plugin.bats              # Plugin structure
 │   ├── plugin-validation.bats   # Plugin artifact validation
-│   └── workflow.bats            # Workflow integration
+│   ├── workflow.bats            # Workflow integration
+│   └── workflow-paths.bats      # Workflow control flow, error paths included
 │
 ├── e2e/                        # End-to-end tests
 │   └── error-recovery.bats      # Error handling tests
 │
 ├── bats-core/                  # Git submodule - BATS framework
 ├── run-tests.sh               # Intelligent test runner
+├── workflow-harness.mjs       # Runs a workflow body with stubbed globals
 └── README.md                  # This documentation
 ```
 
@@ -127,6 +129,7 @@ bats e2e/                           # All E2E tests
 - `plugin.bats`: Plugin structure
 - `plugin-validation.bats`: Plugin artifact validation (requires `python3`)
 - `workflow.bats`: Workflow integration
+- `workflow-paths.bats`: Workflow control flow via `workflow-harness.mjs` (requires `node`)
 
 ### End-to-End Tests (`tests/e2e/`)
 
@@ -173,6 +176,21 @@ Advanced test execution with multiple options:
 ./run-tests.sh --filter "version"   # Pattern filtering
 ./run-tests.sh --tap                # TAP output for CI
 ```
+
+### Workflow Harness (`workflow-harness.mjs`)
+
+Runs a `workflows/*.js` body with `agent`, `parallel`, `pipeline`, `phase`, `log` and `args`
+stubbed, so a test can assert on the control flow without calling a model:
+
+```bash
+node tests/workflow-harness.mjs workflows/spec.js fixture.json
+```
+
+The fixture is `{"args": <any>, "agents": {"<label>": <result>}}`. `args` reaches the script
+verbatim, so a string value exercises the JSON-string path and an object the object path. A label
+the fixture omits resolves to `null`, which is what a dead subagent returns. The harness prints one
+JSON line: `{"result", "agents", "phases", "logs"}` — `agents` lists the labels that started, in
+order, which is how a test asserts that a gate skipped a phase.
 
 ## GitHub Actions Integration
 
