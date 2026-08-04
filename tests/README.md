@@ -23,11 +23,6 @@ tests/
 ├── e2e/                        # End-to-end tests
 │   └── error-recovery.bats      # Error handling tests
 │
-├── helpers/                    # Granular test helpers
-│   ├── common.bash             # Common utilities
-│   ├── assertions.bash         # Custom assertions
-│   └── environment.bash        # Environment setup
-│
 ├── bats-core/                  # Git submodule - BATS framework
 ├── run-tests.sh               # Intelligent test runner
 └── README.md                  # This documentation
@@ -139,38 +134,6 @@ bats e2e/                           # All E2E tests
 **Files**:
 - `error-recovery.bats`: Error handling and recovery
 
-## Helper System
-
-`tests/helpers/` holds three helper modules. **No test loads them today, and no test can.** Each
-module starts with `load 'common'`, and BATS resolves `load` against the directory of the test
-file, not the directory of the helper. A test in `tests/integration/` therefore fails with
-`Could not find .../tests/integration/common`. Every current test file instead sets its own
-`PROJECT_ROOT` and defines its own `setup` and `teardown`. See the test template below.
-
-Fixing the modules means replacing `load 'common'` with a path relative to the module itself.
-Until then, treat this section as an inventory, not as instructions.
-
-### Core Helper Modules
-
-**`common.bash`**: Basic utilities and setup
-- Project root detection
-- Color codes and output functions
-- Project validation
-
-**`assertions.bash`**: Domain-specific assertions
-- `assert_version_format()`: Validate semantic version strings
-- `assert_executable()`: Check file permissions
-- `assert_directory_structure()`: Verify directory trees
-- `assert_files_exist()`: Check required files
-- `assert_output_contains()`: Verify command output
-
-**`environment.bash`**: Test lifecycle management
-- `setup_integration_test()`: Standard integration setup
-- `setup_unit_test()`: Standard unit setup
-- `setup_e2e_test()`: Comprehensive E2E setup
-- `teardown_*()`: Cleanup functions
-- `run_with_timeout()`: Command timeout wrapper
-
 ## Benefits of Organized Structure
 
 ### 🎯 **Clear Separation of Concerns**
@@ -181,7 +144,6 @@ Until then, treat this section as an inventory, not as instructions.
 ### 📁 **Easy Navigation**
 - Tests organized by purpose in logical directories
 - Collocated unit tests for discoverability
-- Granular helpers for reusability
 
 ### ⚡ **Flexible Execution**
 - Run specific test types: `--unit`, `--integration`, `--e2e`
@@ -189,15 +151,8 @@ Until then, treat this section as an inventory, not as instructions.
 - Parallel execution: `--parallel`
 - CI-ready TAP output: `--tap`
 
-### 🔧 **Maintainable Helpers**
-- Modular helper functions
-- Domain-specific assertions
-- Standardized setup/teardown
-- Reusable test fixtures
-
 ### 🚀 **Scalable Architecture**
 - Easy to add new test categories
-- Simple to extend helper modules  
 - Backward compatible structure
 - CI/CD integration ready
 
