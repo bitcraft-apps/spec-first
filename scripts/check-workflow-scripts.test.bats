@@ -5,6 +5,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 CHECKER="$PROJECT_ROOT/scripts/check-workflow-scripts.sh"
 export CHECKER
 
@@ -152,4 +155,97 @@ write_workflow() {
     run "$CHECKER"
     [ "$status" -eq 1 ]
     [[ "$output" == *"meta block not found"* ]]
+}
+
+# Writes a workflow declaring the Research and Synthesis phases, with the given body appended.
+write_phased_workflow() {
+    write_workflow "spec.js" "  name: 'sf-spec',
+  phases: [
+    { title: 'Research', detail: 'look around' },
+    { title: 'Synthesis', detail: 'write it up' },
+  ],"
+    echo "$1" >> workflows/spec.js
+}
+
+@test "declared phases that the body enters pass" {
+    write_phased_workflow "phase('Research')
+await agent('research it')
+phase('Synthesis')
+await agent('write it up')"
+
+    run "$CHECKER"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"PASS: 1 workflow script(s) load"* ]]
+}
+
+@test "a renamed meta title fails" {
+    write_workflow "spec.js" "  name: 'sf-spec',
+  phases: [
+    { title: 'Research' },
+    { title: 'Merge' },
+  ],"
+    printf "phase('Research')\nphase('Synthesis')\n" >> workflows/spec.js
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    assert_output_contains 'phase("Synthesis") has no meta.phases entry'
+    assert_output_contains 'meta.phases declares "Merge" but nothing enters it'
+}
+
+@test "a phase call with no meta entry fails" {
+    write_phased_workflow "phase('Research')
+phase('Synthesis')
+phase('Cleanup')"
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *'phase("Cleanup") has no meta.phases entry'* ]]
+}
+
+@test "a declared phase nothing enters fails" {
+    write_phased_workflow "phase('Research')"
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *'meta.phases declares "Synthesis" but nothing enters it'* ]]
+}
+
+@test "a phase entered only through agent opts passes" {
+    write_phased_workflow "phase('Research')
+await agent('write it up', { label: 'synthesize', phase: 'Synthesis' })"
+
+    run "$CHECKER"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"PASS: 1 workflow script(s) load"* ]]
+}
+
+@test "an agent opts phase with no meta entry fails" {
+    write_phased_workflow "phase('Research')
+phase('Synthesis')
+await agent('write it up', { label: 'synthesize', phase: 'Merge' })"
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *'an agent opts phase "Merge" has no meta.phases entry'* ]]
+}
+
+@test "a computed phase argument fails" {
+    write_phased_workflow "const title = 'Research'
+phase(title)
+phase('Synthesis')"
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"phase() needs a string literal"* ]]
+}
+
+@test "a phase declared without a title fails" {
+    write_workflow "spec.js" "  name: 'sf-spec',
+  phases: [
+    { detail: 'look around' },
+  ],"
+
+    run "$CHECKER"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"needs a string title"* ]]
 }

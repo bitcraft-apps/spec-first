@@ -20,6 +20,10 @@ fi
 # Parses the meta block and prints its name. The loader needs a pure object literal, so this
 # evaluates the block in an empty sandbox: a variable, a call or an interpolated identifier
 # throws ReferenceError there. Backticks and spreads survive that, so they are rejected by hand.
+# Then compares meta.phases[].title against the phase titles the body uses: the loader matches
+# them by exact string, and a divergence only shows up as a stray progress group at run time.
+# The literal-only rule makes that a string-set diff — the body is never evaluated.
+# shellcheck disable=SC2016 # JavaScript, not shell: the $ belongs to a regex character class
 READ_META='
 import { readFileSync } from "node:fs"
 import vm from "node:vm"
@@ -46,6 +50,44 @@ if (typeof value.name !== "string") fail("meta.name is missing or not a string")
 if (!/^sf-[a-z0-9-]+$/.test(value.name)) {
     fail("meta.name must match ^sf-[a-z0-9-]+$ so it cannot take a built-in name: " + value.name)
 }
+
+const declared = []
+if (value.phases !== undefined) {
+    if (!Array.isArray(value.phases)) fail("meta.phases is not an array")
+    for (const entry of value.phases) {
+        if (!entry || typeof entry.title !== "string") fail("every meta.phases entry needs a string title")
+        declared.push(entry.title)
+    }
+}
+
+// Titles a phase() call enters. A computed argument cannot be matched to meta, so it is rejected.
+const body = src.slice(match[0].length)
+const called = new Set()
+for (const call of body.matchAll(/(^|[^\w.$])phase\(([^)]*)\)/g)) {
+    const arg = call[2].trim()
+    const literal = arg.match(/^([\x27"])([^\x27"]*)\1$/)
+    if (!literal) fail("phase() needs a string literal to match meta.phases: phase(" + arg + ")")
+    called.add(literal[2])
+}
+
+// An agent opts `phase:` enters a group too, so a title used only there is still entered.
+const opts = new Set()
+for (const opt of body.matchAll(/[{,]\s*phase:\s*([\x27"])([^\x27"]*)\1/g)) opts.add(opt[2])
+const entered = new Set([...called, ...opts])
+
+const problems = []
+for (const title of called) {
+    if (!declared.includes(title)) problems.push("phase(" + JSON.stringify(title) + ") has no meta.phases entry")
+}
+for (const title of opts) {
+    if (!declared.includes(title) && !called.has(title)) {
+        problems.push("an agent opts phase " + JSON.stringify(title) + " has no meta.phases entry")
+    }
+}
+for (const title of declared) {
+    if (!entered.has(title)) problems.push("meta.phases declares " + JSON.stringify(title) + " but nothing enters it")
+}
+if (problems.length > 0) fail(problems.join("; "))
 
 console.log(value.name)
 '
