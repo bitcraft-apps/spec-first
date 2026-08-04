@@ -199,7 +199,7 @@ order, which is how a test asserts that a gate skipped a phase.
 **Workflow Jobs:**
 1. **tests**: Runs `run-tests.sh` over a matrix of `unit`, `integration` and `e2e`
 2. **plugin-validation**: Checks `plugin.json`, `hooks.json`, and that skill and agent files exist
-3. **shellcheck**: Runs ShellCheck over every `*.sh` file outside `bats-core`
+3. **shellcheck**: Runs `make lint`, which runs ShellCheck over every `*.sh` file outside `bats-core`
 4. **format-checks**: Checks frontmatter fields, agent prompt length, and placeholder text
 
 Every job runs on `ubuntu-latest`.
