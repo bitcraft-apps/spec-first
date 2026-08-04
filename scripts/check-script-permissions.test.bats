@@ -5,6 +5,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 PERMS_SCRIPT="$PROJECT_ROOT/scripts/check-script-permissions.sh"
 
 setup() {
@@ -25,6 +28,11 @@ setup() {
 
 teardown() {
     rm -rf "$FIXTURE_DIR"
+    # Set by the tests that need a repo the fixture cannot provide. Cleaned up here so that
+    # a failing assertion does not leak the directory.
+    if [ -n "${SCRATCH_REPO:-}" ]; then
+        rm -rf "$SCRATCH_REPO"
+    fi
 }
 
 # --- Happy path ---
@@ -33,7 +41,7 @@ teardown() {
     cd "$FIXTURE_DIR"
     run ./scripts/check-script-permissions.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS: 2 shell script(s) are committed executable"* ]]
+    assert_output_contains "PASS: 2 shell script(s) are committed executable"
 }
 
 @test "check-script-permissions accepts symlinked scripts" {
@@ -42,7 +50,7 @@ teardown() {
     git add -A
     run ./scripts/check-script-permissions.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS: 3 shell script(s)"* ]]
+    assert_output_contains "PASS: 3 shell script(s)"
 }
 
 @test "check-script-permissions finds scripts in nested directories" {
@@ -53,7 +61,7 @@ teardown() {
     git add -A
     run ./scripts/check-script-permissions.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS: 3 shell script(s)"* ]]
+    assert_output_contains "PASS: 3 shell script(s)"
 }
 
 # --- Missing executable bit ---
@@ -63,8 +71,8 @@ teardown() {
     git update-index --chmod=-x scripts/good.sh
     run ./scripts/check-script-permissions.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"scripts/good.sh is mode 100644, expected 100755"* ]]
-    [[ "$output" == *"git update-index --chmod=+x scripts/good.sh"* ]]
+    assert_output_contains "scripts/good.sh is mode 100644, expected 100755"
+    assert_output_contains "git update-index --chmod=+x scripts/good.sh"
 }
 
 @test "check-script-permissions reports every offender in one run" {
@@ -75,8 +83,8 @@ teardown() {
     git update-index --chmod=-x scripts/other.sh
     run ./scripts/check-script-permissions.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"scripts/good.sh is mode 100644"* ]]
-    [[ "$output" == *"scripts/other.sh is mode 100644"* ]]
+    assert_output_contains "scripts/good.sh is mode 100644"
+    assert_output_contains "scripts/other.sh is mode 100644"
 }
 
 @test "check-script-permissions ignores the working tree mode" {
@@ -90,22 +98,20 @@ teardown() {
 # --- Wrong working directory ---
 
 @test "check-script-permissions fails outside a git repository" {
-    NON_REPO="$(mktemp -d)"
-    cp "$PERMS_SCRIPT" "$NON_REPO/check-script-permissions.sh"
-    cd "$NON_REPO"
+    SCRATCH_REPO="$(mktemp -d)"
+    cp "$PERMS_SCRIPT" "$SCRATCH_REPO/check-script-permissions.sh"
+    cd "$SCRATCH_REPO"
     run env -u GIT_DIR -u GIT_WORK_TREE bash ./check-script-permissions.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"not inside a git repository"* ]]
-    rm -rf "$NON_REPO"
+    assert_output_contains "not inside a git repository"
 }
 
 @test "check-script-permissions fails when no tracked scripts exist" {
-    EMPTY_REPO="$(mktemp -d)"
-    cp "$PERMS_SCRIPT" "$EMPTY_REPO/check-script-permissions.sh"
-    cd "$EMPTY_REPO"
+    SCRATCH_REPO="$(mktemp -d)"
+    cp "$PERMS_SCRIPT" "$SCRATCH_REPO/check-script-permissions.sh"
+    cd "$SCRATCH_REPO"
     git init -q .
     run bash ./check-script-permissions.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"no tracked *.sh files found"* ]]
-    rm -rf "$EMPTY_REPO"
+    assert_output_contains "no tracked *.sh files found"
 }

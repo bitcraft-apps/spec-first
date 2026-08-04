@@ -8,6 +8,8 @@ bats_require_minimum_version 1.5.0
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)"
 export PROJECT_ROOT
 
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 setup() {
     TEST_DIR="$(mktemp -d)"
     export TEST_DIR
@@ -24,25 +26,6 @@ run_hook() {
     local hook="$1" active="${2:-false}"
     run --separate-stderr bash "$PROJECT_ROOT/hooks/$hook" \
         <<< "{\"cwd\":\"$TEST_DIR\",\"stop_hook_active\":$active}"
-}
-
-# Substring assertions live in functions on purpose: a bare `[[ ... ]]` that is not the
-# last command of a test body does not fail the test, so it would assert nothing.
-assert_output_contains() {
-    case "$output" in *"$1"*) return 0 ;; esac
-    echo "expected output to contain: $1" >&2
-    echo "actual output: $output" >&2
-    return 1
-}
-
-refute_output_contains() {
-    case "$output" in *"$1"*)
-        echo "expected output not to contain: $1" >&2
-        echo "actual output: $output" >&2
-        return 1
-        ;;
-    esac
-    return 0
 }
 
 write_spec() {

@@ -7,6 +7,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 HARNESS="$PROJECT_ROOT/tests/workflow-harness.mjs"
 export HARNESS
 
@@ -38,9 +41,9 @@ run_workflow() {
     run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":'"$SPEC_AGENTS"'}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'"specPath":"docs/spec.md"'* ]]
-    [[ "$output" == *'"agents":["scope","criteria","risks","synthesize-spec"]'* ]]
-    [[ "$output" == *'"phases":["Research","Synthesis"]'* ]]
+    assert_output_contains '"specPath":"docs/spec.md"'
+    assert_output_contains '"agents":["scope","criteria","risks","synthesize-spec"]'
+    assert_output_contains '"phases":["Research","Synthesis"]'
 }
 
 @test "sf-spec treats a JSON-string args the same as an object" {
@@ -59,8 +62,8 @@ run_workflow() {
     run_workflow spec.js '{"args":{"specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":'"$SPEC_AGENTS"'}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'needs requirements, specPath and templatePath'* ]]
-    [[ "$output" == *'"agents":[]'* ]]
+    assert_output_contains 'needs requirements, specPath and templatePath'
+    assert_output_contains '"agents":[]'
 }
 
 @test "sf-spec skips synthesis when a research agent returns nothing" {
@@ -68,41 +71,41 @@ run_workflow() {
     run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":{"scope":{"include":["a flag"],"exclude":[]},"criteria":{"criteria":["it works"]}}}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'Research incomplete'* ]]
-    [[ "$output" != *'synthesize-spec'* ]]
+    assert_output_contains 'Research incomplete'
+    refute_output_contains 'synthesize-spec'
 }
 
 @test "sf-document integrates the drafts on the happy path" {
     run_workflow document.js '{"args":{"specPath":"docs/spec.md"},"agents":{'"$DOC_ANALYSIS"',"technical-docs":{"markdown":"## API"},"user-docs":{"markdown":"Pass --flag."},"integrate-docs":{"changed":["README.md"]}}}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'"changed":["README.md"]'* ]]
-    [[ "$output" == *'"integrate-docs"'* ]]
-    [[ "$output" == *'"phases":["Analysis","Drafting","Integration"]'* ]]
+    assert_output_contains '"changed":["README.md"]'
+    assert_output_contains '"integrate-docs"'
+    assert_output_contains '"phases":["Analysis","Drafting","Integration"]'
 }
 
 @test "sf-document errors and starts no agent without a source path" {
     run_workflow document.js '{"args":{},"agents":{'"$DOC_ANALYSIS"'}}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'needs specPath or implementationPath'* ]]
-    [[ "$output" == *'"agents":[]'* ]]
+    assert_output_contains 'needs specPath or implementationPath'
+    assert_output_contains '"agents":[]'
 }
 
 @test "sf-document integrates nothing when a draft has a placeholder marker" {
     run_workflow document.js '{"args":{"specPath":"docs/spec.md"},"agents":{'"$DOC_ANALYSIS"',"technical-docs":{"markdown":"## API\nTODO: fill this in"},"user-docs":{"markdown":"Pass --flag."},"integrate-docs":{"changed":["README.md"]}}}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'placeholder marker: technical'* ]]
-    [[ "$output" != *'integrate-docs'* ]]
-    [[ "$output" == *'"phases":["Analysis","Drafting"]'* ]]
+    assert_output_contains 'placeholder marker: technical'
+    refute_output_contains 'integrate-docs'
+    assert_output_contains '"phases":["Analysis","Drafting"]'
 }
 
 @test "sf-document integrates nothing when both drafts are empty" {
     run_workflow document.js '{"args":{"implementationPath":"src/index.js"},"agents":{'"$DOC_ANALYSIS"',"technical-docs":{"markdown":"   "},"user-docs":{"markdown":""},"integrate-docs":{"changed":["README.md"]}}}'
 
     [ "$status" -eq 0 ]
-    [[ "$output" == *'"changed":[]'* ]]
-    [[ "$output" == *'needs no documentation'* ]]
-    [[ "$output" != *'integrate-docs'* ]]
+    assert_output_contains '"changed":[]'
+    assert_output_contains 'needs no documentation'
+    refute_output_contains 'integrate-docs'
 }

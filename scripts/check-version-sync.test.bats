@@ -5,6 +5,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 SYNC_SCRIPT="$PROJECT_ROOT/scripts/check-version-sync.sh"
 
 setup() {
@@ -31,7 +34,7 @@ teardown() {
     cd "$FIXTURE_DIR"
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASS: all version references match 1.0.0"* ]]
+    assert_output_contains "PASS: all version references match 1.0.0"
 }
 
 @test "check-version-sync tolerates trailing whitespace in VERSION" {
@@ -48,7 +51,7 @@ teardown() {
     printf '{"name":"sf","version":"9.9.9"}\n' > .claude-plugin/plugin.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"plugin.json version is 9.9.9, expected 1.0.0"* ]]
+    assert_output_contains "plugin.json version is 9.9.9, expected 1.0.0"
 }
 
 @test "check-version-sync fails when marketplace.json drifts" {
@@ -56,7 +59,7 @@ teardown() {
     printf '{"plugins":[{"name":"sf","version":"9.9.9"}]}\n' > .claude-plugin/marketplace.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"marketplace.json version is 9.9.9"* ]]
+    assert_output_contains "marketplace.json version is 9.9.9"
 }
 
 @test "check-version-sync fails when release-please manifest drifts" {
@@ -64,7 +67,7 @@ teardown() {
     printf '{".":"9.9.9"}\n' > .release-please-manifest.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *".release-please-manifest.json version is 9.9.9"* ]]
+    assert_output_contains ".release-please-manifest.json version is 9.9.9"
 }
 
 @test "check-version-sync reports every mismatch in one run" {
@@ -73,8 +76,8 @@ teardown() {
     printf '{".":"8.8.8"}\n' > .release-please-manifest.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"plugin.json version is 9.9.9"* ]]
-    [[ "$output" == *".release-please-manifest.json version is 8.8.8"* ]]
+    assert_output_contains "plugin.json version is 9.9.9"
+    assert_output_contains ".release-please-manifest.json version is 8.8.8"
 }
 
 # --- Missing or malformed sources are hard failures, not skips ---
@@ -84,7 +87,7 @@ teardown() {
     rm .claude-plugin/plugin.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"plugin.json not found"* ]]
+    assert_output_contains "plugin.json not found"
 }
 
 @test "check-version-sync fails when a version key is absent" {
@@ -92,7 +95,7 @@ teardown() {
     printf '{"name":"sf"}\n' > .claude-plugin/plugin.json
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"has no version at"* ]]
+    assert_output_contains "has no version at"
 }
 
 @test "check-version-sync fails on malformed VERSION" {
@@ -100,7 +103,7 @@ teardown() {
     echo "1.3" > VERSION
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"VERSION is not a valid semver"* ]]
+    assert_output_contains "VERSION is not a valid semver"
 }
 
 @test "check-version-sync fails when VERSION is missing" {
@@ -108,5 +111,5 @@ teardown() {
     rm VERSION
     run ./scripts/check-version-sync.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"VERSION file not found"* ]]
+    assert_output_contains "VERSION file not found"
 }

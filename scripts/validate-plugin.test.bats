@@ -5,6 +5,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 VALIDATE_SCRIPT="$PROJECT_ROOT/scripts/validate-plugin.sh"
 SYNC_SCRIPT="$PROJECT_ROOT/scripts/check-version-sync.sh"
 
@@ -88,7 +91,7 @@ set_fixture_version() {
     cd "$(mktemp -d)"
     run "$VALIDATE_SCRIPT"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Must be run from the repository root"* ]]
+    assert_output_contains "Must be run from the repository root"
 }
 
 # --- Valid structure ---
@@ -97,7 +100,7 @@ set_fixture_version() {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"PASSED"* ]]
+    assert_output_contains "PASSED"
 }
 
 # --- VERSION file checks ---
@@ -114,7 +117,7 @@ set_fixture_version() {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"valid format"* ]]
+    assert_output_contains "valid format"
 }
 
 @test "validate-plugin accepts valid version format" {
@@ -122,14 +125,14 @@ set_fixture_version() {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"VERSION file has valid format"* ]]
+    assert_output_contains "VERSION file has valid format"
 }
 
 @test "validate-plugin reports version references in sync" {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 0 ]
-    [[ "$output" == *"Version references are in sync (1.0.0)"* ]]
+    assert_output_contains "Version references are in sync (1.0.0)"
 }
 
 @test "validate-plugin fails when a version reference drifts" {
@@ -137,7 +140,7 @@ set_fixture_version() {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
     [ "$status" -eq 1 ]
-    [[ "$output" == *"plugin.json version is 9.9.9, expected 1.0.0"* ]]
+    assert_output_contains "plugin.json version is 9.9.9, expected 1.0.0"
 }
 
 # --- Directory structure ---
@@ -163,13 +166,13 @@ set_fixture_version() {
     echo "# No frontmatter agent" > "$FIXTURE_DIR/agents/bad-agent.md"
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
-    [[ "$output" == *"frontmatter"* ]]
+    assert_output_contains "frontmatter"
 }
 
 @test "validate-plugin counts agents" {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
-    [[ "$output" == *"1 agent"* ]]
+    assert_output_contains "1 agent"
 }
 
 @test "validate-plugin counts multiple agents" {
@@ -186,7 +189,7 @@ Does other things.
 AGENT
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
-    [[ "$output" == *"2 agent"* ]]
+    assert_output_contains "2 agent"
 }
 
 # --- Skill validation ---
@@ -194,7 +197,7 @@ AGENT
 @test "validate-plugin counts skills" {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
-    [[ "$output" == *"1 skill"* ]]
+    assert_output_contains "1 skill"
 }
 
 # --- Summary output ---
@@ -202,9 +205,9 @@ AGENT
 @test "validate-plugin shows summary with pass/fail counts" {
     cd "$FIXTURE_DIR"
     run ./scripts/validate-plugin.sh
-    [[ "$output" == *"Validation Summary"* ]]
-    [[ "$output" == *"Passed:"* ]]
-    [[ "$output" == *"Failed:"* ]]
+    assert_output_contains "Validation Summary"
+    assert_output_contains "Passed:"
+    assert_output_contains "Failed:"
 }
 
 @test "validate-plugin exit code reflects failures" {

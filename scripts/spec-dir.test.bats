@@ -4,6 +4,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 SPEC_DIR_SH="$PROJECT_ROOT/scripts/spec-dir.sh"
 export SPEC_DIR_SH
 
@@ -26,13 +29,13 @@ run_spec_dir() {
 @test "rejects a missing mode" {
     run run_spec_dir "$TEST_DIR"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Usage:"* ]]
+    assert_output_contains "Usage:"
 }
 
 @test "rejects an unknown mode" {
     run run_spec_dir "$TEST_DIR" bogus "$TEST_DIR/.sf"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Usage:"* ]]
+    assert_output_contains "Usage:"
     [ ! -d "$TEST_DIR/.sf" ]
 }
 
@@ -48,9 +51,9 @@ run_spec_dir() {
 @test "names the markers when no root exists" {
     run run_spec_dir "$TEST_DIR" first
     [ "$status" -eq 1 ]
-    [[ "$output" == *".git"* ]]
-    [[ "$output" == *"AGENTS.md"* ]]
-    [[ "$output" == *"CLAUDE.md"* ]]
+    assert_output_contains ".git"
+    assert_output_contains "AGENTS.md"
+    assert_output_contains "CLAUDE.md"
 }
 
 @test "uses SF_DIR when the caller exports it" {
@@ -176,7 +179,7 @@ run_spec_dir() {
 
     run run_spec_dir "$TEST_DIR" first "$TEST_DIR/readonly/.sf"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Cannot create or write to"* ]]
+    assert_output_contains "Cannot create or write to"
 
     chmod 700 "$TEST_DIR/readonly"
 }

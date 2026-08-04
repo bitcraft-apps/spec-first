@@ -4,6 +4,9 @@
 
 PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
 export PROJECT_ROOT
+
+load "$PROJECT_ROOT/tests/helpers/assertions.bash"
+
 INSTALL_SH="$PROJECT_ROOT/scripts/install.sh"
 export INSTALL_SH
 
@@ -19,7 +22,7 @@ teardown() {
 @test "rejects an unknown option" {
     run bash "$INSTALL_SH" --bogus
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Usage:"* ]]
+    assert_output_contains "Usage:"
 }
 
 @test "installs every skill into --dir" {
@@ -72,7 +75,7 @@ teardown() {
 
     run bash "$INSTALL_SH" --dir "$TEST_DIR/skills"
     [ "$status" -eq 1 ]
-    [[ "$output" == *"--force"* ]]
+    assert_output_contains "--force"
     [ "$(cat "$TEST_DIR/skills/spec/SKILL.md")" = "mine" ]
 }
 
