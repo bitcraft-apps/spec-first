@@ -151,5 +151,6 @@ that users cannot see gets no user documentation.
 
 - [Examples](../examples/) — a backend service, a command line tool and a React component,
   each from one complete run.
+- [Team Workflow](team-workflow.md) — how a team shares a spec through the ticket.
 - [Technical Reference](technical-reference.md) — `$SF_DIR`, the scripts and the schemas.
 - [Supported hosts](supported-hosts.md) — the skills directory each host reads.
