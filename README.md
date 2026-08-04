@@ -4,91 +4,27 @@ Write the requirements before you write the code. Spec First gives you a workflo
 
 ## Who is this for
 
+Give an agent a vague prompt, and the agent decides the requirements for you. You find out what it
+decided when you read the diff. A wrong decision then costs you the whole change.
+
+Spec First puts the requirements in a file first. You read that file and correct it. The agent
+builds from the file you approved.
+
 Use Spec First if you want your coding agent to build from clear requirements.
 
 ## Quick Start
 
-### Claude Code
-
-Add the marketplace. Then install the plugin from your terminal:
+On Claude Code, add the marketplace. Then install the plugin:
 
 ```bash
 claude plugin marketplace add bitcraft-apps/spec-first
 claude plugin install sf@spec-first
 ```
 
-Or run these commands in Claude Code:
+On another host, install the skills with `./scripts/install.sh`. The [host
+table](#supported-hosts) below gives the command for each host.
 
-```
-/plugin marketplace add bitcraft-apps/spec-first
-/plugin install sf@spec-first
-```
-
-### Other agent hosts
-
-Many agent hosts read skills from the shared `.agents/skills` location. Install the skills there from a checkout:
-
-```bash
-git clone https://github.com/bitcraft-apps/spec-first && cd spec-first
-./scripts/install.sh                         # ~/.agents/skills — every project
-./scripts/install.sh --dir .agents/skills    # one project only
-```
-
-[Supported hosts](docs/supported-hosts.md) gives the directory each host reads. Hosts that read
-somewhere else need `--dir`; see the [host table](#supported-hosts) below.
-
-A checkout installs by symlink. A downloaded release installs by copy. To remove the skills, delete them:
-
-```bash
-rm -rf ~/.agents/skills/{spec,implement,document}
-```
-
-Write your first spec:
-
-```
-/sf:spec Add a rate limiter to the API gateway
-```
-
-```
-Researching requirements...
-
-  Research (parallel): scope, criteria, risks
-  Synthesis: spec.md
-
-Spec written to .sf/spec.md
-```
-
-Implement it:
-
-```
-/sf:implement
-```
-
-```
-Step 1: Learning patterns from codebase...
-  Found: src/middleware/auth.ts (similar middleware pattern)
-
-Step 2: Implementing...
-  Created: src/middleware/rate-limiter.ts
-  Updated: src/middleware/index.ts
-  Created: src/middleware/rate-limiter.test.ts
-
-Implementation summary written to .sf/implementation-summary.md
-```
-
-Document it:
-
-```
-/sf:document
-```
-
-```
-Analysis (parallel): artifacts, implementation, existing docs
-Drafting (parallel): technical, user
-Integration: merge into the existing docs
-
-Updated: docs/middleware.md (added rate limiter section)
-```
+New to Spec First? [Getting Started](docs/getting-started.md) walks through your first spec.
 
 ## How it works
 
