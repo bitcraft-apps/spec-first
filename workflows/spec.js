@@ -52,19 +52,19 @@ const [scope, criteria, risks] = await parallel([
     `Define the narrowest viable scope for these requirements.\n\nRequirements: ${requirements}\n\n` +
     `${RULES}\nExclude everything that is not needed now. Challenge feature creep. If a ` +
     `requirement is unclear, exclude it.`,
-    { label: 'scope', phase: 'Research', schema: SCOPE, model: 'haiku', effort: 'low' },
+    { label: 'scope', phase: 'Research', schema: SCOPE, effort: 'low' },
   ),
   () => agent(
     `Write the simplest testable pass/fail conditions for these requirements.\n\n` +
     `Requirements: ${requirements}\n\n${RULES}\nNo enterprise metrics unless the requirements ` +
     `ask for them. "It works" is better than "it is optimal".`,
-    { label: 'criteria', phase: 'Research', schema: CRITERIA, model: 'haiku', effort: 'low' },
+    { label: 'criteria', phase: 'Research', schema: CRITERIA, effort: 'low' },
   ),
   () => agent(
     `Identify the blockers for these requirements.\n\nRequirements: ${requirements}\n\n` +
     `${RULES}\nBlockers only, not every possible risk. Challenge assumptions. Essential edge ` +
     `cases only.`,
-    { label: 'risks', phase: 'Research', schema: RISKS, model: 'haiku', effort: 'low' },
+    { label: 'risks', phase: 'Research', schema: RISKS, effort: 'low' },
   ),
 ])
 

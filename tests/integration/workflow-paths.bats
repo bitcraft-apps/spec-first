@@ -44,6 +44,12 @@ run_workflow() {
     assert_output_contains '"specPath":"docs/spec.md"'
     assert_output_contains '"agents":["scope","criteria","risks","synthesize-spec"]'
     assert_output_contains '"phases":["Research","Synthesis"]'
+    assert_output_contains '"agentOptions":'
+    assert_output_contains '"label":"scope","phase":"Research","schema":'
+    assert_output_contains '"effort":"low"},{"label":"criteria","phase":"Research","schema":'
+    assert_output_contains '"effort":"low"},{"label":"risks","phase":"Research","schema":'
+    assert_output_contains '"effort":"low"},{"label":"synthesize-spec","phase":"Synthesis"'
+    refute_output_contains '"model":'
 }
 
 @test "sf-spec treats a JSON-string args the same as an object" {
@@ -82,6 +88,12 @@ run_workflow() {
     assert_output_contains '"changed":["README.md"]'
     assert_output_contains '"integrate-docs"'
     assert_output_contains '"phases":["Analysis","Drafting","Integration"]'
+    assert_output_contains '"agentOptions":'
+    assert_output_contains '"label":"artifacts","phase":"Analysis","schema":'
+    assert_output_contains '"effort":"low"},{"label":"implementation","phase":"Analysis","schema":'
+    assert_output_contains '"effort":"low"},{"label":"inventory","phase":"Analysis","schema":'
+    assert_output_contains '"effort":"low"},{"label":"technical-docs","phase":"Drafting","schema":'
+    refute_output_contains '"model":'
 }
 
 @test "sf-document errors and starts no agent without a source path" {
