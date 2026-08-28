@@ -3,8 +3,9 @@
 ## Overview
 
 - 3 commands. Each one is a skill that states the steps and the gates for one agent to run in order.
-- On Claude Code, `/sf:spec` and `/sf:document` run as workflow scripts, which start 4 and 6
-  agents. `/sf:implement` runs the built-in Explore subagent, then `implement-minimal`.
+- On Claude Code, `/sf:spec` starts 2 agents by default and `/sf:document` starts 6 agents.
+  `parallelResearch: true` makes `/sf:spec` start 4 agents. `/sf:implement` runs the built-in
+  Explore subagent, then `implement-minimal`.
 - `agents/` registers 1 subagent. The workflow scripts hold the other prompts, so those agents
   cost no session context.
 - Steps that write research output write it to `.sf/research/`. Git ignores this directory. The
@@ -16,7 +17,8 @@ The `skills/` directory defines the commands. Each `SKILL.md` gives the steps an
 
 The steps below are the Claude Code path.
 
-- `/sf:spec [REQUIREMENTS]` runs the `sf-spec` workflow. The workflow researches scope, criteria and risks in parallel, then writes `spec.md`.
+- `/sf:spec [REQUIREMENTS]` runs the `sf-spec` workflow. By default, the workflow uses one
+  schema-checked research call for scope, criteria, and risks, then writes `spec.md`.
 - `/sf:implement [SPEC_OR_PATH]` runs the Explore subagent to find patterns. Then it runs `implement-minimal` to write the code.
 - `/sf:document [PATHS]` runs the `sf-document` workflow. The workflow analyzes the change, drafts the documents, then integrates them into `docs/`.
 
@@ -41,17 +43,19 @@ needs no registration, so every prompt the workflows own lives in the script ins
 
 | Agent | Model | Effort |
 | --- | --- | --- |
-| `scope`, `criteria`, `risks` in `sf-spec` | caller/host policy | `low` |
+| `research-combined` in `sf-spec` (default) | caller/host policy | `low` |
+| `scope`, `criteria`, `risks` in `sf-spec` (`parallelResearch: true`) | caller/host policy | `low` |
 | `artifacts`, `implementation`, `inventory` in `sf-document` | caller/host policy | `low` |
 | `synthesize-spec` in `sf-spec` | the caller's | the caller's |
 | `technical-docs`, `user-docs`, `integrate-docs` in `sf-document` | the caller's | the caller's |
 | `implement-minimal` | the caller's | the caller's |
 
-The six extraction agents produce short structured output from text they are given at low effort.
-They inherit the caller's or host's model policy and do not require Haiku access. The others make
-judgment calls about what to build and what to write. They inherit the caller's tier, because that
-tier is the user's choice for the session. A named tier would downgrade a user on Opus and raise
-the bill for a user on Haiku.
+The default `research-combined` agent and the three analysis agents produce short structured
+output from text they are given at low effort. With `parallelResearch: true`, `sf-spec` uses the
+three focused structured research agents instead. They inherit the caller's or host's model
+policy and do not require Haiku access. The others make judgment calls about what to build and
+what to write. They inherit the caller's tier, because that tier is the user's choice for the
+session. A named tier would downgrade a user on Opus and raise the bill for a user on Haiku.
 
 `effort` accepts `low`, `medium`, `high`, `xhigh`, `max`, or an integer.
 
@@ -82,12 +86,15 @@ the `sf-` prefix for that reason.
 {
   "requirements": "string — what to specify",
   "specPath": "string — where to write spec.md",
-  "templatePath": "string — the spec-template.md to follow"
+  "templatePath": "string — the spec-template.md to follow",
+  "parallelResearch": "boolean — false by default; true uses three parallel research calls"
 }
 ```
 
-Returns `{ specPath, criteria, risks }`, where the last two are counts. The three research
-agents return validated objects, so this path writes no files under `research/`.
+Returns `{ specPath, criteria, risks }`, where the last two are counts. By default, one
+schema-checked research result contains the existing nested scope, criteria, and risks objects.
+When `parallelResearch` is `true`, the three separate research agents return those same objects.
+This path writes no files under `research/`.
 
 ### sf-document
 

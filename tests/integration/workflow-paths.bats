@@ -13,9 +13,13 @@ load "$PROJECT_ROOT/tests/helpers/assertions.bash"
 HARNESS="$PROJECT_ROOT/tests/workflow-harness.mjs"
 export HARNESS
 
-# Every research agent returns a valid result, so only the args handling decides the outcome.
-SPEC_AGENTS='{"scope":{"include":["a flag"],"exclude":["a config file"]},"criteria":{"criteria":["the flag works"]},"risks":{"risks":["none"]},"synthesize-spec":"written"}'
+# The default combined research agent returns the existing nested result shapes.
+SPEC_AGENTS='{"research-combined":{"scope":{"include":["a flag"],"exclude":["a config file"]},"criteria":{"criteria":["the flag works"]},"risks":{"risks":["none"]}},"synthesize-spec":"written"}'
 export SPEC_AGENTS
+
+# The opt-in path retains the three separate research agent results.
+PARALLEL_SPEC_AGENTS='{"scope":{"include":["a flag"],"exclude":["a config file"]},"criteria":{"criteria":["the flag works"]},"risks":{"risks":["none"]},"synthesize-spec":"written"}'
+export PARALLEL_SPEC_AGENTS
 
 # The three analysis results document.js needs before it drafts anything.
 DOC_ANALYSIS='"artifacts":{"requirements":["a flag"],"outcomes":["the flag works"]},"implementation":{"files":["src/index.js"],"interfaces":["greet()"]},"inventory":{"docs":[{"path":"README.md","topic":"overview"}]}'
@@ -37,19 +41,28 @@ run_workflow() {
     run node "$HARNESS" "$PROJECT_ROOT/workflows/$workflow" "$TEST_DIR/fixture.json"
 }
 
-@test "sf-spec runs every agent when args is an object" {
+@test "sf-spec runs combined research by default when args is an object" {
     run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":'"$SPEC_AGENTS"'}'
 
     [ "$status" -eq 0 ]
     assert_output_contains '"specPath":"docs/spec.md"'
-    assert_output_contains '"agents":["scope","criteria","risks","synthesize-spec"]'
+    assert_output_contains '"agents":["research-combined","synthesize-spec"]'
     assert_output_contains '"phases":["Research","Synthesis"]'
     assert_output_contains '"agentOptions":'
+    assert_output_contains '"label":"research-combined","phase":"Research","schema":'
+    assert_output_contains '"effort":"low"},{"label":"synthesize-spec","phase":"Synthesis"'
+    refute_output_contains '"model":'
+}
+
+@test "sf-spec runs separate research agents when parallel research is enabled" {
+    run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md","parallelResearch":true},"agents":'"$PARALLEL_SPEC_AGENTS"'}'
+
+    [ "$status" -eq 0 ]
+    assert_output_contains '"agents":["scope","criteria","risks","synthesize-spec"]'
     assert_output_contains '"label":"scope","phase":"Research","schema":'
     assert_output_contains '"effort":"low"},{"label":"criteria","phase":"Research","schema":'
     assert_output_contains '"effort":"low"},{"label":"risks","phase":"Research","schema":'
     assert_output_contains '"effort":"low"},{"label":"synthesize-spec","phase":"Synthesis"'
-    refute_output_contains '"model":'
 }
 
 @test "sf-spec treats a JSON-string args the same as an object" {
@@ -72,12 +85,13 @@ run_workflow() {
     assert_output_contains '"agents":[]'
 }
 
-@test "sf-spec skips synthesis when a research agent returns nothing" {
-    # A dead subagent resolves to null, so the fixture omits the risks label.
-    run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":{"scope":{"include":["a flag"],"exclude":[]},"criteria":{"criteria":["it works"]}}}'
+@test "sf-spec skips synthesis when combined research returns nothing" {
+    # A dead subagent resolves to null, so the fixture omits the combined research label.
+    run_workflow spec.js '{"args":{"requirements":"add a flag","specPath":"docs/spec.md","templatePath":"tpl.md"},"agents":{"synthesize-spec":"written"}}'
 
     [ "$status" -eq 0 ]
     assert_output_contains 'Research incomplete'
+    assert_output_contains '"agents":["research-combined"]'
     refute_output_contains 'synthesize-spec'
 }
 

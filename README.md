@@ -37,8 +37,8 @@ Each command gives the same steps and the same checks to every host.
 - **The checks are gates.** A script fails when the spec misses a section, or when an acceptance
   criterion stays unchecked. On Claude Code a hook blocks the turn. On another host the skill
   stops the agent from reporting the work as done.
-- **Claude Code does the independent work in parallel.** `/sf:spec` and `/sf:document` run as
-  workflow scripts. Every other host does the same steps in order.
+- **Claude Code runs workflow steps.** `/sf:spec` and `/sf:document` run as workflow scripts.
+  Every other host does the same steps in order.
 
 The spec stays on your machine. [Team Workflow](docs/team-workflow.md) shows how a team shares it
 through the ticket.
@@ -52,6 +52,10 @@ The table shows the typical range for each phase. The example is a small CLI too
 | spec | 10k–30k | 2k–6k |
 | implement | 30k–120k | 5k–30k |
 | document | 20k–60k | 3k–10k |
+
+By default, `/sf:spec` uses one schema-checked research call and one synthesis call. Set the
+workflow input `parallelResearch: true` to use separate scope, criteria, and risk calls in
+parallel.
 
 Your token counts change with the size of the codebase, the complexity of the feature, and the number of iterations. For current prices, see [Claude pricing](https://www.anthropic.com/pricing).
 
@@ -67,7 +71,7 @@ Your token counts change with the size of the codebase, the complexity of the fe
 
 | Host | Install | What runs |
 |------|---------|-----------|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — reads `~/.claude/skills` | `claude plugin install sf@spec-first` | The three commands, parallel subagents, and validation hooks |
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — reads `~/.claude/skills` | `claude plugin install sf@spec-first` | The three commands, workflow subagents, and validation hooks |
 | Hosts that read `.agents/skills`: pi, opencode, Codex CLI, GitHub Copilot CLI, Gemini CLI, Cursor, Zed, Amp, Goose, Crush, Kilo Code, Warp, Factory Droid, OpenHands | `./scripts/install.sh` | The three commands in order. The skills call the validation scripts, so the same checks run. |
 | Hosts that read their own directory: Cline (`~/.cline/skills`), Qwen Code (`~/.qwen/skills`), iFlow CLI (`~/.iflow/skills`) | `./scripts/install.sh --dir <that directory>` | Same as above |
 | Any other host with a skills directory | `./scripts/install.sh --dir <dir>` | Same as above |

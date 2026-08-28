@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Create specifications through parallel analysis
+description: Create specifications from requirements
 disable-model-invocation: true
 argument-hint: "[REQUIREMENTS]"
 ---
@@ -59,8 +59,10 @@ Say: "Spec written to `{output path}`. Run `/sf:implement` to build it."
 
 ## On Claude Code
 
-Claude Code runs steps 1 to 3 as the `sf-spec` workflow — in parallel, schema-checked, and
-without the research files.
+Claude Code runs one schema-checked combined research call by default, then synthesis. The
+combined result supplies scope, criteria, and risks without research files. Set
+`parallelResearch: true` in the workflow input to run steps 1 to 3 as three parallel research
+calls.
 
 Context arrives for free:
 - Branch: !`git branch --show-current 2>/dev/null`
@@ -71,5 +73,7 @@ Context arrives for free:
 - Use the **AskUserQuestion** tool for both questions above, so execution pauses for the answer.
 - Bash: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-dir.sh $MODE ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
 - Workflow tool, `name: "sf-spec"`. Pass `args` as a JSON object, never as a string:
-  `{"requirements": "$ARGUMENTS", "specPath": "<the spec.md path above>", "templatePath": "${CLAUDE_SKILL_DIR}/spec-template.md"}`
+  `{"requirements": "$ARGUMENTS", "specPath": "<the spec.md path above>", "templatePath": "${CLAUDE_SKILL_DIR}/spec-template.md"}`.
+  `parallelResearch` is a boolean and defaults to `false`; set it to `true` for three parallel
+  research calls.
 - Gate: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate-spec.sh ${CLAUDE_PROJECT_DIR:+$CLAUDE_PROJECT_DIR/.sf}`
