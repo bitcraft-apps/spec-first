@@ -80,19 +80,19 @@ const [artifacts, implementation, inventory] = await parallel([
   () => agent(
     `Read ${sources}. Extract the requirements and the outcomes they state. Read only what ` +
     `exists. Assume nothing about a missing file. Extract text; do not analyze.`,
-    { label: 'artifacts', phase: 'Analysis', schema: ARTIFACTS, model: 'haiku', effort: 'low' },
+    { label: 'artifacts', phase: 'Analysis', schema: ARTIFACTS, effort: 'low' },
   ),
   () => agent(
     `Find the real structure of the change described in ${sources}. Report the main ` +
     `implementation files, the public interfaces that changed, and the naming conventions. ` +
     `Stay technology agnostic.`,
-    { label: 'implementation', phase: 'Analysis', schema: IMPLEMENTATION, model: 'haiku', effort: 'low' },
+    { label: 'implementation', phase: 'Analysis', schema: IMPLEMENTATION, effort: 'low' },
   ),
   () => agent(
     `Inventory the existing documentation. Glob \`*.md\` in the project root and \`docs/**/*.md\`, ` +
     `at most 3 levels deep. For each file, read the first 20 lines only and report its path and ` +
     `primary topic. Never read a whole file.`,
-    { label: 'inventory', phase: 'Analysis', schema: INVENTORY, model: 'haiku', effort: 'low' },
+    { label: 'inventory', phase: 'Analysis', schema: INVENTORY, effort: 'low' },
   ),
 ])
 

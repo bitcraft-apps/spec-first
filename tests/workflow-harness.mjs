@@ -11,7 +11,7 @@
 // verbatim, so a string there exercises the JSON-string path and an object the object path. A
 // label the fixture omits resolves to null, which is what a dead subagent returns.
 //
-// Prints one JSON line: { result, agents, phases, logs }.
+// Prints one JSON line: { result, agents, agentOptions, phases, logs }.
 
 import { readFileSync } from 'node:fs'
 
@@ -26,12 +26,14 @@ const fixture = JSON.parse(readFileSync(fixturePath, 'utf8'))
 const results = fixture.agents ?? {}
 
 const agents = []
+const agentOptions = []
 const phases = []
 const logs = []
 
 const agent = async (_prompt, opts = {}) => {
   const label = opts.label ?? null
   agents.push(label)
+  agentOptions.push(opts)
   return label in results ? results[label] : null
 }
 
@@ -64,4 +66,4 @@ try {
   process.exit(1)
 }
 
-console.log(JSON.stringify({ result, agents, phases, logs }))
+console.log(JSON.stringify({ result, agents, agentOptions, phases, logs }))
