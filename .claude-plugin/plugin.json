@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "sf",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal.",
   "author": {
     "name": "Szymon Graczyk",
