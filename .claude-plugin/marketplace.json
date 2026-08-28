@@ -12,7 +12,7 @@
         "repo": "bitcraft-apps/spec-first"
       },
       "description": "Guides you from requirements to working code — define a spec, implement it, and generate docs, all from your terminal. Installs as a Claude Code plugin, or as skills on 15+ other agent hosts.",
-      "version": "2.0.0"
+      "version": "2.1.0"
     }
   ]
 }

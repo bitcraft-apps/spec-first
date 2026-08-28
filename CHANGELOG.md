@@ -5,6 +5,25 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0](https://github.com/bitcraft-apps/spec-first/compare/v2.0.0...v2.1.0) (2026-08-28)
+
+
+### Features
+
+* **spec:** use one research call by default ([#310](https://github.com/bitcraft-apps/spec-first/issues/310)) ([99c3a5b](https://github.com/bitcraft-apps/spec-first/commit/99c3a5b29e65cc90d9209edb730cb3029a547391))
+
+
+### Bug Fixes
+
+* **workflows:** inherit host model policy ([#308](https://github.com/bitcraft-apps/spec-first/issues/308)) ([425bb77](https://github.com/bitcraft-apps/spec-first/commit/425bb778b93182e45be95d1a3e073eaa1467534e))
+
+
+### Miscellaneous
+
+* **deps:** bump actions/cache from 5.1.0 to 6.1.0 ([#304](https://github.com/bitcraft-apps/spec-first/issues/304)) ([09a5606](https://github.com/bitcraft-apps/spec-first/commit/09a5606dfea86499ee070c41a7627dd389413eac))
+* **deps:** bump actions/checkout from 6.1.0 to 7.0.1 ([#305](https://github.com/bitcraft-apps/spec-first/issues/305)) ([1435e6e](https://github.com/bitcraft-apps/spec-first/commit/1435e6eda538a6f7e60f16e2f63800a063954e62))
+* **deps:** bump tests/bats-core from `3bca150` to `eb7f42f` ([#303](https://github.com/bitcraft-apps/spec-first/issues/303)) ([f62cd1a](https://github.com/bitcraft-apps/spec-first/commit/f62cd1a45734bf12e124181fe7fc6cccd5ccb25c))
+
 ## [2.0.0](https://github.com/bitcraft-apps/spec-first/compare/v1.3.1...v2.0.0) (2026-08-04)
 
 
