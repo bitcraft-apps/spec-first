@@ -104,6 +104,8 @@ lint:
 		| xargs shellcheck -x
 	@echo "🔍 Checking script permissions..."
 	@./scripts/check-script-permissions.sh
+	@echo "🔍 Checking skill links..."
+	@./scripts/check-skill-links.sh
 	@echo "🔍 Checking bats assertions..."
 	@./scripts/check-bats-assertions.sh
 	@echo "✅ Lint complete!"
