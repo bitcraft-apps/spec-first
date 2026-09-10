@@ -5,6 +5,13 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1](https://github.com/bitcraft-apps/spec-first/compare/v2.1.0...v2.1.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **skills:** store gate scripts as real files, not symlinks ([#312](https://github.com/bitcraft-apps/spec-first/issues/312)) ([145f93e](https://github.com/bitcraft-apps/spec-first/commit/145f93ec9bd4a8cb9be9eeb9975726db0b60fa08))
+
 ## [2.1.0](https://github.com/bitcraft-apps/spec-first/compare/v2.0.0...v2.1.0) (2026-08-28)
 
 
