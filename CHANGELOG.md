@@ -5,6 +5,13 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2](https://github.com/bitcraft-apps/spec-first/compare/v2.1.1...v2.1.2) (2026-09-15)
+
+
+### Documentation
+
+* **hosts:** verify Codex CLI row ([#320](https://github.com/bitcraft-apps/spec-first/issues/320)) ([8549645](https://github.com/bitcraft-apps/spec-first/commit/85496458b5582f46c5e5dfd35988f265d5a3c61f))
+
 ## [2.1.1](https://github.com/bitcraft-apps/spec-first/compare/v2.1.0...v2.1.1) (2026-09-10)
 
 
