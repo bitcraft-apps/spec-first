@@ -18,7 +18,7 @@ check runs by hand before a release — see [Host Skill Loading Check](../tests/
 |------|------------------|-------------------|--------|---------|---------|
 | pi | `~/.agents/skills/` | `.agents/skills/` | [docs/skills.md](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md) | 0.83.0 | 2026-08-04 |
 | opencode | `~/.agents/skills/` | `.agents/skills/` | [opencode.ai/docs/skills](https://opencode.ai/docs/skills/) | 1.18.13 | 2026-08-04 |
-| Codex CLI | `$HOME/.agents/skills` | `.agents/skills` in cwd, parents and repo root | [learn.chatgpt.com/docs/build-skills](https://learn.chatgpt.com/docs/build-skills) | 0.146.0 | 2026-08-04 |
+| Codex CLI | `$HOME/.agents/skills` | `.agents/skills` in cwd, parents and repo root | [learn.chatgpt.com/docs/build-skills](https://learn.chatgpt.com/docs/build-skills) | 0.154.0 | 2026-09-10 |
 | GitHub Copilot CLI | `~/.agents/skills` | `.agents/skills` | [docs.github.com — about agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) | 1.0.78 | 2026-08-04 |
 | Gemini CLI | `~/.agents/skills/` | `.agents/skills/` | [geminicli.com/docs/cli/skills](https://geminicli.com/docs/cli/skills/) | 0.53.1 | 2026-08-04 |
 | Cursor | `~/.agents/skills/` | `.agents/skills/` | [cursor.com/docs/context/skills](https://cursor.com/docs/context/skills) | undated docs | 2026-08-04 |
@@ -41,6 +41,9 @@ Notes on individual rows:
   as the global one. The global `~/.agents/skills` scan is in the source, so both are cited.
 - **Cursor** and **Warp** publish undated documentation with no version, so the version column
   cannot be filled. Both were read on the date shown.
+- **Codex CLI** also ships skills as plugins through a shared plugin directory
+  ([package your plugin](https://developers.openai.com/plugins/build/plugins), `codex plugin`
+  CLI). sf installs the skills directory only. Packaging a plugin is out of scope.
 
 ## Hosts that read somewhere else
 
