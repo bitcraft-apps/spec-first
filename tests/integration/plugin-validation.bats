@@ -122,7 +122,7 @@ for event in data['hooks'].values():
             # Extract script basename from command like 'bash .../validate-spec.sh'
             parts = cmd.split('/')
             if parts:
-                print(parts[-1])
+                print(parts[-1].strip('\"\''))
 ")
     for script in $referenced_scripts; do
         [ -f "$hooks_dir/$script" ] || {
