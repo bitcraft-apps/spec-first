@@ -3,8 +3,8 @@
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/validate-spec.sh" },
-          { "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/validate-implementation.sh" }
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/validate-spec.sh\"" },
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/validate-implementation.sh\"" }
         ]
       }
     ]
