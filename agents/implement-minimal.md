@@ -7,7 +7,7 @@ maxTurns: 25
 
 # Minimal Implementation
 
-Creates SIMPLEST solution that works.
+Write the simplest solution that works.
 
 Inputs:
 - `.sf/spec.md` or specified path
