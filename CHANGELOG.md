@@ -5,6 +5,15 @@ All notable changes to Spec First will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2](https://github.com/bitcraft-apps/spec-first/compare/v2.1.1...v2.1.2) (2026-11-20)
+
+
+### Documentation
+
+* **agents:** give each implement-minimal rule its reason ([#325](https://github.com/bitcraft-apps/spec-first/issues/325)) ([7d8ac82](https://github.com/bitcraft-apps/spec-first/commit/7d8ac826b0b12fb56c55cfc9c661480b9c972ba2))
+* **agents:** state implement-minimal's goal at normal volume ([#323](https://github.com/bitcraft-apps/spec-first/issues/323)) ([e9a1dc8](https://github.com/bitcraft-apps/spec-first/commit/e9a1dc8d570784848f3100398e859350485077d4))
+* **hosts:** verify Codex CLI row ([#320](https://github.com/bitcraft-apps/spec-first/issues/320)) ([8549645](https://github.com/bitcraft-apps/spec-first/commit/85496458b5582f46c5e5dfd35988f265d5a3c61f))
+
 ## [2.1.1](https://github.com/bitcraft-apps/spec-first/compare/v2.1.0...v2.1.1) (2026-09-10)
 
 
